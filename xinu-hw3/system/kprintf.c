@@ -40,6 +40,13 @@ syscall kgetc(void)
             }
             counter++;
     }
+
+    // until status of reg of pointer changes
+    while(PL011_FR_RXFF!=0){
+        return regptr->dr;
+    }
+
+
     return SYSERR;
 }
 
@@ -47,6 +54,7 @@ syscall kgetc(void)
  * kcheckc - check to see if a character is available.
  * @return true if a character is available, false otherwise.
  */
+int j = 0;
 syscall kcheckc(void)
 {
     volatile struct pl011_uart_csreg *regptr;
@@ -54,6 +62,17 @@ syscall kcheckc(void)
 
     // TODO: Check the unget buffer and the UART for characters.
 
+    char curr = kgetc();
+    if (curr != '\0'){
+        if (regptr->ilpr != 0){
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+    
     return SYSERR;
 }
 
@@ -62,11 +81,19 @@ syscall kcheckc(void)
  * @param c character to unget.
  * @return c on success, SYSERR on failure.
  */
+int i = 0;
 syscall kungetc(unsigned char c)
 {
     // TODO: Check for room in unget buffer, put the character in or discard.
 
-    return SYSERR;
+    int size = strlen(ungetArray);
+    int room = UNGETMAX - size;
+    if (ungetArray[room] == '\0'){
+        ungetArray[room] = c;
+        return c;
+    } else {
+        return SYSERR;
+    }
 }
 
 
