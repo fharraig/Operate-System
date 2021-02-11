@@ -36,7 +36,7 @@ syscall kgetc(void)
             if (ungetArray[counter]=='\0'){
                 break;
             }if (ungetArray[counter+1] == '\0'){
-                return ungetArray[counter];
+                return (int) ungetArray[counter];
             }
             counter++;
     }
@@ -45,7 +45,6 @@ syscall kgetc(void)
     while(PL011_FR_RXFF!=0){
         return regptr->dr;
     }
-
 
     return SYSERR;
 }
@@ -62,8 +61,8 @@ syscall kcheckc(void)
 
     // TODO: Check the unget buffer and the UART for characters.
 
-    char curr = kgetc();
-    if (curr != '\0'){
+    int curr = kgetc();
+    if (curr != 0){
         if (regptr->ilpr != 0){
             return 1;
         } else {
@@ -108,7 +107,7 @@ syscall kungetc(unsigned char c)
  *      The character written to the UART as an <code>unsigned char</code> cast
  *      to an <code>int</code>.
  */
-syscall kputc(uchar c)
+syscall kputc(unsigned char c)
 {
     volatile struct pl011_uart_csreg *regptr;
 
@@ -117,6 +116,10 @@ syscall kputc(uchar c)
 
     // TODO: Check UART flags register.
     //       Once the Transmitter FIFO is not full, send character c.
+
+    while(regptr -> fr != 0) {
+        return c;
+    }
 
     return SYSERR;
 }
