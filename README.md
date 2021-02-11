@@ -1,2 +1,4 @@
-# xinu-hw3
-kprintf.c implemntation and test cases 
+# Operating Systems Project
+xinu-hw3 = kprintf.c initial implementation and testcases.c initial implementation
+
+

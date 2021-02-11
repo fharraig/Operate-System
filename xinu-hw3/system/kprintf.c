@@ -118,7 +118,7 @@ syscall kputc(unsigned char c)
     //       Once the Transmitter FIFO is not full, send character c.
 
     while(regptr -> fr != 0) {
-        return c;
+        regptr -> dr = (int) c;
     }
 
     return SYSERR;
