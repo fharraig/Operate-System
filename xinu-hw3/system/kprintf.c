@@ -18,6 +18,9 @@ static unsigned char ungetArray[UNGETMAX];
  *      The character read from the UART as an <code>unsigned char</code> cast
  *      to an <code>int</code>.
  */
+
+unsigned char placement;
+int counter = 0;
 syscall kgetc(void)
 {
     volatile struct pl011_uart_csreg *regptr;
@@ -29,6 +32,14 @@ syscall kgetc(void)
     //       Otherwise, check UART flags register, and
     //       once the receiver is not empty, get character c.
 
+    while (counter <= UNGETMAX){
+            if (ungetArray[counter]=='\0'){
+                break;
+            }if (ungetArray[counter+1] == '\0'){
+                return ungetArray[counter];
+            }
+            counter++;
+    }
     return SYSERR;
 }
 
