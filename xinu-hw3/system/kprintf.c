@@ -52,7 +52,7 @@ syscall kgetc(void)
     }
 
     while (regptr -> fr & PL011_FR_RXFE != 1){
-        return (int) regptr -> fr;
+        return (int) regptr -> dr;
     }
 
     return SYSERR;
@@ -69,20 +69,6 @@ syscall kcheckc(void)
     regptr = (struct pl011_uart_csreg *)0x3F201000;
 
     // TODO: Check the unget buffer and the UART for characters.
-
-    /* 
-    int curr = kgetc();
-    if (curr != 0){
-        if (regptr->ilpr != 0){
-            return 1;
-        } else {
-            return 0;
-        }
-    } else {
-        return 0;
-    }
-
-    */
     
     if (regptr -> dr & PL011_FR_TXFE != 1){
         return 1;
@@ -98,7 +84,6 @@ syscall kcheckc(void)
  * @param c character to unget.
  * @return c on success, SYSERR on failure.
  */
-int i = 0;
 syscall kungetc(unsigned char c)
 {
     // TODO: Check for room in unget buffer, put the character in or discard.
@@ -109,9 +94,8 @@ syscall kungetc(unsigned char c)
             ungetArray[size] = c;
             return c;
         }
-    } else {
-        return SYSERR;
     }
+    return SYSERR;
 }
 
 /**

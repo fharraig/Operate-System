@@ -31,14 +31,18 @@ void testcases(void)
     c = kgetc();
     switch (c)
     {
-
         // TODO: Test your operating system!
+        case 'a': 
+        case 't':  
+        case 'p': 
+        case 'z': 
+        case 'v': 
+        case 'm': 
 
     default:
         kprintf("Hello Xinu World!\r\n");
     }
-
-
+ 
     kprintf("\r\n===TEST END===\r\n");
     return;
 }
