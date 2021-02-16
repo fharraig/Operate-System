@@ -69,7 +69,7 @@ syscall kcheckc(void)
     
    if (counter > 0){
        return TRUE;
-   } else if (regptr -> dr != NULL) { //UART checking ????
+   } else if (!(regptr -> fr & PL011_FR_RXFE)) { //UART checking -- this test was added post TA Bot output, 2/16/21
        return TRUE;
    } else {
        return FALSE;
