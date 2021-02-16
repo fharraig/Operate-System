@@ -62,17 +62,18 @@ syscall kgetc(void)
 
 syscall kcheckc(void)
 {
-    //volatile struct pl011_uart_csreg *regptr;
-    //regptr = (struct pl011_uart_csreg *)0x3F201000;
+    volatile struct pl011_uart_csreg *regptr;
+    regptr = (struct pl011_uart_csreg *)0x3F201000;
 
     // TODO: Check the unget buffer and the UART for characters.
     
    if (counter > 0){
        return TRUE;
+   } else if (regptr -> dr != NULL) { //UART checking ????
+       return TRUE;
    } else {
        return FALSE;
    }
-   
     return SYSERR;
 }
 

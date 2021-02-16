@@ -27,9 +27,10 @@ void testcases(void)
 
     kprintf("===TEST BEGIN===\r\n");
 
-    kprintf("\r \n Testing Menu: \r \na = kungetc and kcheckc (TRUE) \r \ns = kcheckc (FALSE) \r \nd = kgetc() \r \nf = kputc() \r \nb = ??? \r \n");
+    kprintf("\r \nTesting Menu: \r \na = kungetc() and kcheckc() \r \ns = kcheckc() and kputc() \r \nd = kgetc() \r \nf = kputc() \r \ng = kgetc(), kungetc(), kcheckc() \r \nb = ??? \r \n");
 
     int c;
+    int q;
     int w;
 
     c = kgetc();
@@ -45,21 +46,32 @@ void testcases(void)
                 kprintf("False. \r \n");
             }
             break;
-        case 's': 
+        case 's':
             if (kcheckc()){
-                kprintf("True. \r \n");
+                kputc('q');
+            } else {
+                kprintf("False \r \n");
+            }
+            break;
+        case 'd':
+            kprintf("Enter character ...");
+            w = kgetc(); //takes in input char and prints it
+            kprintf("Char = %c \r \n", w);
+            break;
+        case 'f': 
+            kputc('t'); //prints out a t
+            break;
+        case 'g':
+            kprintf("Enter character : \r \n");
+            q = kgetc();
+            kungetc(q);
+            if (kcheckc()){
+                kprintf("True : %c \r \n", q);
             } else {
                 kprintf("False. \r \n");
             }
             break;
-        case 'd':
-            w = kgetc();
-            kprintf("Char = %c \r \n", w);
-            break;
-        case 'f': 
-            kputc('t');
-            break;
-        case 'b': 
+        case 'b': //super mystery test case
             kprintf("Hello there. \r \n");
             break;
     default:
