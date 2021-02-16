@@ -57,11 +57,11 @@ syscall kgetc(void)
  * kcheckc - check to see if a character is available.
  * @return true if a character is available, false otherwise.
  */
-int newcount = 0;
+
 syscall kcheckc(void)
 {
-    volatile struct pl011_uart_csreg *regptr;
-    regptr = (struct pl011_uart_csreg *)0x3F201000;
+    //volatile struct pl011_uart_csreg *regptr;
+    //regptr = (struct pl011_uart_csreg *)0x3F201000;
 
     // TODO: Check the unget buffer and the UART for characters.
     

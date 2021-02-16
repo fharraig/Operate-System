@@ -40,22 +40,24 @@ void testcases(void)
         case 'a': 
             kungetc('a');
             if (kcheckc()){ //supposed to return true
-                kprintf("True");
+                kprintf("True. \r \n");
             } else {
-                kprintf("False");
+                kprintf("False. \r \n");
             }
             break;
         case 's': 
             if (kcheckc()){
-                kprintf("True");
+                kprintf("True. \r \n");
             } else {
-                kprintf("False.");
+                kprintf("False. \r \n");
             }
+            break;
         case 'd':
             w = kgetc();
-            kprintf("Char = %c \n", w);
+            kprintf("Char = %c \r \n", w);
+            break;
         case 'b': 
-            kprintf("Hello there.");
+            kprintf("Hello there. \r \n");
             break;
     default:
         kprintf("Hello Xinu World!\r\n");
