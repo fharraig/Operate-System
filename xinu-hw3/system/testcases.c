@@ -27,7 +27,7 @@ void testcases(void)
 
     kprintf("===TEST BEGIN===\r\n");
 
-    kprintf("\r \n Testing Menu: \r \na = kungetc and kcheckc (TRUE) \r \ns = kcheckc (FALSE) \r \nd = kgetc() \r \nb = ??? \r \n");
+    kprintf("\r \n Testing Menu: \r \na = kungetc and kcheckc (TRUE) \r \ns = kcheckc (FALSE) \r \nd = kgetc() \r \nf = kputc() \r \nb = ??? \r \n");
 
     int c;
     int w;
@@ -55,6 +55,9 @@ void testcases(void)
         case 'd':
             w = kgetc();
             kprintf("Char = %c \r \n", w);
+            break;
+        case 'f': 
+            kputc('t');
             break;
         case 'b': 
             kprintf("Hello there. \r \n");
