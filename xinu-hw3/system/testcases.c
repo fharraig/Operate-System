@@ -24,21 +24,39 @@ devcall putc(int dev, char c)
  */
 void testcases(void)
 {
-    int c;
 
     kprintf("===TEST BEGIN===\r\n");
 
+    kprintf("\r \n Testing Menu: \r \na = kungetc and kcheckc (TRUE) \r \ns = kcheckc (FALSE) \r \nd = kgetc() \r \nb = ??? \r \n");
+
+    int c;
+    int w;
+
     c = kgetc();
+
     switch (c)
     {
         // TODO: Test your operating system!
         case 'a': 
-        case 't':  
-        case 'p': 
-        case 'z': 
-        case 'v': 
-        case 'm': 
-
+            kungetc('a');
+            if (kcheckc()){ //supposed to return true
+                kprintf("True");
+            } else {
+                kprintf("False");
+            }
+            break;
+        case 's': 
+            if (kcheckc()){
+                kprintf("True");
+            } else {
+                kprintf("False.");
+            }
+        case 'd':
+            w = kgetc();
+            kprintf("Char = %c \n", w);
+        case 'b': 
+            kprintf("Hello there.");
+            break;
     default:
         kprintf("Hello Xinu World!\r\n");
     }
