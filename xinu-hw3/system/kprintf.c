@@ -10,6 +10,8 @@
  * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
 */
 
+/* Collaborated briefly with Andrew Leinauer regarding logic */
+
 /* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <xinu.h>
