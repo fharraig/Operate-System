@@ -5,6 +5,14 @@
  * Embedded Xinu, Copyright (C) 2008, 2018. All rights reserved.
  */
 
+/** 
+ * COSC 3250 - Project 4
+ * spinlock implementation in C
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
+
 #include <xinu.h>
 
 struct lockent locktab[NLOCK];  /* spinlock table */

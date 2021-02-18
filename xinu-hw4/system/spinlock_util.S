@@ -4,6 +4,14 @@
  *
  * Embedded Xinu, Copyright (C) 2018. All rights reserved.
  */
+ 
+ /** 
+ * COSC 3250 - Project 4
+ * spinlock implementation in ARM Assembly
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
 
 #include <spinlock.h>
 
@@ -28,8 +36,16 @@ _lock_acquire:
 	//	 	If strex fails, try from the top.
 
 	dmb			/* Data Memory Barrier	*/
-	bx	lr
+	bx lr
 
+	ldrex r1, [r0]
+	cmp r1, #SPINLOCK_LOCKED
+	beq _lock_acquire
+
+	strex	r1, r1, #SPINLOCK_LOCKED
+	cmp r1, #SPINLOCK_LOCKED
+	bne _lock_acquire
+	
 	.endfunc
 
 /**
