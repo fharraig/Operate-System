@@ -42,10 +42,11 @@ _lock_acquire:
 	cmp r1, #SPINLOCK_LOCKED
 	beq _lock_acquire
 
-	strex	r1, r1, #SPINLOCK_LOCKED
-	cmp r1, #SPINLOCK_LOCKED
+	add r1, r1, #1 //increment to SPINLOCK_LOCKED
+	strex	r2, r1, [r0] //STREX to SPINLOCK LOCKED
+	cmp r2, #SPINLOCK_LOCKED 
 	bne _lock_acquire
-	
+
 	.endfunc
 
 /**

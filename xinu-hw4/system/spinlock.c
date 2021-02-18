@@ -75,6 +75,13 @@ syscall lock_acquire(spinlock_t lock)
     //       Next, call _lock_acquire assembly subroutine
     //       and properly set "core" field of lockent struct        
 
+    if (isbadlock(lock))
+        return SYSERR;
+
+    _lock_acquire;
+
+    locktab[lock].core = getcpuid();
+    
     return OK;
 }
 
@@ -88,6 +95,13 @@ syscall lock_release(spinlock_t lock)
     // TODO: Check if lock is a valid lock.
     //       Call _lock_release assembly subroutine and
     //       reset "core" field of lockent struct
+
+    if (isbadlock(lock))
+        return SYSERR;
+
+    _lock_release;
+
+    locktab[lock].core = getcpuid();
 
     return OK;
 }
