@@ -13,6 +13,8 @@
 
 #include <xinu.h>
 
+// struct lockent locktab[NLOCK];  /* spinlock table */
+
 devcall putc(int dev, char c)
 {
     return 0;
@@ -27,7 +29,7 @@ void testcases(void)
 
     kprintf("===TEST BEGIN===\r\n");
 
-    kprintf("\r \nTesting Menu: \r \na = kungetc() and kcheckc() \r \ns = kcheckc() and kputc() \r \nd = kgetc() \r \nf = kputc() \r \ng = kgetc(), kungetc(), kcheckc() \r \nb = ??? \r \n");
+    kprintf("\r \nTesting Menu: \r \na = kungetc() and kcheckc() \r \ns = kcheckc() and kputc() \r \nd = kgetc() \r \nf = kputc() \r \ng = kgetc(), kungetc(), kcheckc() \r \n");
 
     int c;
     int q;
@@ -71,9 +73,8 @@ void testcases(void)
                 kprintf("False. \r \n");
             }
             break;
-        case 'b': //super mystery test case
-            kprintf("Hello there. \r \n");
-            break;
+        case 'q':
+            kprintf("Core: %i \r \n", );
     default:
         kprintf("Hello Xinu World!\r\n");
     }

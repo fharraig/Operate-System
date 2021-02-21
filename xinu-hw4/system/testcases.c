@@ -55,7 +55,7 @@ void testcases(void)
 
     case '1':
         // 1 spinlock, acquire and release
-        // Tests to make sure lock field is being set correctly.
+        // Tests to make sure lock field is beingb set correctly.
         // Expected output is that lock field is set to SPINLOCK_UNLOCKED.
         testlock = lock_create();
 

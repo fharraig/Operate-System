@@ -35,18 +35,19 @@ _lock_acquire:
 	//	 Second, use strex to try to set the lock to SPINLOCK_LOCKED.
 	//	 	If strex fails, try from the top.
 
-	dmb			/* Data Memory Barrier	*/
-	bx lr
-
+	dmb			/* Data Memory Barrier	*/	
 	ldrex r1, [r0]
 	cmp r1, #SPINLOCK_LOCKED
 	beq _lock_acquire
 
-	add r1, r1, #1 //increment to SPINLOCK_LOCKED
-	strex	r2, r1, [r0] //STREX to SPINLOCK LOCKED
-	cmp r2, #SPINLOCK_LOCKED 
+	mov r1, #SPINLOCK_LOCKED
+	dmb
+	strex r2, r1, [r0]
+	cmp r2, #SPINLOCK_LOCKED
 	bne _lock_acquire
-
+	
+	dmb
+	bx lr
 	.endfunc
 
 /**
