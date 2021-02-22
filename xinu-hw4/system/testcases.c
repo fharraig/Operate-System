@@ -91,7 +91,7 @@ void testcases(void)
 
         testlock = lock_create();
 
-        unparkcore(1, (void *) lock_acquire(testlock), NULL);
+        //unparkcore(1, (void *) lock_acquire(testlock), NULL);
 
         print_lockent(testlock);
         
@@ -106,14 +106,15 @@ void testcases(void)
         // if they do then the lock is not working properly.
         //
         // Expected output is that the core field should be 0.
+        
         // TODO: Write this testcase.
 
         testlock = lock_create();
         lock_acquire(testlock);
 
-        unparkcore(1, (void *) lock_acquire(testlock), NULL);
-        unparkcore(2, (void *) lock_acquire(testlock), NULL);
-        unparkcore(3, (void *) lock_acquire(testlock), NULL);
+        //unparkcore(1, (void *) lock_acquire(testlock), NULL);
+        //unparkcore(2, (void *) lock_acquire(testlock), NULL);
+        //unparkcore(3, (void *) lock_acquire(testlock), NULL);
 
         print_lockent(testlock);
 
