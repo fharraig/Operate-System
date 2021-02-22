@@ -115,14 +115,10 @@ syscall kputc(unsigned char c)
     // TODO: Check UART flags register.
     //       Once the Transmitter FIFO is not full, send character c.
 
-    if (regptr -> fr & PL011_FR_TXFE) {
-        regptr -> dr = c;
-    } else {
-        while (!(regptr -> fr & PL011_FR_TXFE));
-        regptr -> dr = c;
-    }
+    while (regptr -> fr & PL011_FR_TXFF);
+    regptr -> dr = (int) c;
+    return c;
 
-    return SYSERR;
 }
 
 /**
@@ -140,13 +136,14 @@ syscall kputc(unsigned char c)
  */
 syscall kprintf(const char *format, ...)
 {
-
+    //lock_acquire(serial_lock);
     int retval;
     va_list ap;
 
     va_start(ap, format);
     retval = _doprnt(format, ap, (int (*)(int, int))kputc, 0);
     va_end(ap);
+    //lock_release(serial_lock);
 
     return retval;
 }

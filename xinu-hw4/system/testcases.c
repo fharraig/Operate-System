@@ -88,6 +88,7 @@ void testcases(void)
         // This tests that the core field is being set.
         // Expected output is that lock field is locked and core field is 1.
         
+
         // TODO: Write this testcase.
         break;
 

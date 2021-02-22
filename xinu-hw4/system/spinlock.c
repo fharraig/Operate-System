@@ -78,7 +78,7 @@ syscall lock_acquire(spinlock_t lock)
     if (isbadlock(lock))
         return SYSERR;
 
-    _lock_acquire(lock);  
+    _lock_acquire(&(locktab[lock].lock));  
 
     locktab[lock].core = getcpuid();
     
@@ -99,7 +99,7 @@ syscall lock_release(spinlock_t lock)
     if (isbadlock(lock))
         return SYSERR;
 
-    _lock_release(lock);
+    _lock_release(&(locktab[lock].lock));
 
     locktab[lock].core = getcpuid();
 
