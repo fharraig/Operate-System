@@ -101,7 +101,7 @@ syscall lock_release(spinlock_t lock)
 
     _lock_release(&(locktab[lock].lock));
 
-    locktab[lock].core = getcpuid();
+    locktab[lock].core = -1;
 
     return OK;
 }
