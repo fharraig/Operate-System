@@ -91,9 +91,11 @@ void testcases(void)
 
         testlock = lock_create();
 
-        //unparkcore(1, (void *) lock_acquire(testlock), NULL);
-
+        unparkcore(1, (void *) core_acquire, (void *) testlock);
+        
         print_lockent(testlock);
+
+        lock_free(testlock);
         
         break;
 
@@ -112,11 +114,13 @@ void testcases(void)
         testlock = lock_create();
         lock_acquire(testlock);
 
-        //unparkcore(1, (void *) lock_acquire(testlock), NULL);
-        //unparkcore(2, (void *) lock_acquire(testlock), NULL);
-        //unparkcore(3, (void *) lock_acquire(testlock), NULL);
+        unparkcore(1, (void *) core_acquire, (void *) testlock);
+        unparkcore(2, (void *) core_acquire, (void *) testlock);
+        unparkcore(3, (void *) core_acquire, (void *) testlock);
 
         print_lockent(testlock);
+
+        lock_free(testlock);
 
         break;
 
