@@ -6,6 +6,14 @@
  */
 /* Embedded XINU, Copyright (C) 2008.  All rights reserved. */
 
+/** 
+ * COSC 3250 - Project 5
+ * create process in C
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
+
 #include <arm.h>
 #include <xinu.h>
 
@@ -54,7 +62,11 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	ppcb->state = PRSUSP;
 
 	// TODO: Setup PCB entry for new process.
-
+	
+	strncpy(ppcb->name, name, PNMLEN);
+    ppcb->stklen = ssize;
+    ppcb->stkbase = saddr;
+	ppcb->core_affinity = -1;
 
 	/* Initialize stack with accounting block. */
 	*saddr = STACKMAGIC;
@@ -75,12 +87,21 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	}
 
 	// TODO: Initialize process context.
-	//
+
+	ppcb -> regs[PREG_LR] = userret;
+	ppcb -> regs[PREG_PC] = funcaddr;
+	ppcb -> regs[PREG_SP] = saddr;
+
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
 	//        va_end macros for variable argument functions.
 
-	return pid;
+	va_start(ap, nargs);
+	int x;
+	for (x = 0; x < numproc; x++) {
+		proctab[x] = va_arg(ap, struct pentry);
+	}
+	va_end(ap);
 }
 
 /**

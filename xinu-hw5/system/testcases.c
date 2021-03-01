@@ -127,6 +127,7 @@ void testcases(void)
 		ready(create((void *)testmain, INITSTK, "MAIN3", 2, 0, NULL), RESCHED_NO, 3);
 		break;
 	default:
+        kprintf("Hello there \r \n");
 		break;
     }
 
