@@ -98,8 +98,12 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 
 	va_start(ap, nargs);
 	int x;
-	for (x = 0; x < numproc; x++) {
-		proctab[x] = va_arg(ap, struct pentry);
+	for (x = 0; x < nargs; x++){
+		if (x > 4) {
+			*(++saddr) = va_arg(ap, int);
+		} else {
+			ppcb -> regs[x] = va_arg(ap, int);
+		}
 	}
 	va_end(ap);
 }

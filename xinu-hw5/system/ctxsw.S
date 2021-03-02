@@ -42,23 +42,25 @@ ctxsw:
 	// TODO: Jump to next function. 
 	
 	mov ip, r0
-	
-	str r1, [r0, #PREG_R0 * 4]
+	str r0, [ip, #PREG_R0 * 4]
+	mov r0, ip
+	mov ip, r1
+
 	str r1, [r0, #PREG_R1 * 4]
-	str r1, [r0, #PREG_R2 * 4]
-	str r1, [r0, #PREG_R3 * 4]
-	str r1, [r0, #PREG_R4 * 4]
-	str r1, [r0, #PREG_R5 * 4]
-	str r1, [r0, #PREG_R6 * 4]
-	str r1, [r0, #PREG_R7 * 4]
-	str r1, [r0, #PREG_R8 * 4]
-	str r1, [r0, #PREG_R9 * 4]
-	str r1, [r0, #PREG_R10 * 4]
-	str r1, [r0, #PREG_R11 * 4]
-	str r1, [r0, #PREG_IP * 4]
-	str r1, [r0, #PREG_SP * 4]
-	str r1, [r0, #PREG_LR * 4]
-	str r1, [r0, #PREG_PC * 4]
+	str r2, [r0, #PREG_R2 * 4]
+	str r3, [r0, #PREG_R3 * 4]
+	str r4, [r0, #PREG_R4 * 4]
+	str r5, [r0, #PREG_R5 * 4]
+	str r6, [r0, #PREG_R6 * 4]
+	str r7, [r0, #PREG_R7 * 4]
+	str r8, [r0, #PREG_R8 * 4]
+	str r9, [r0, #PREG_R9 * 4]
+	str r10, [r0, #PREG_R10 * 4]
+	str r11, [r0, #PREG_R11 * 4]
+	str ip, [r0, #PREG_IP * 4]
+	str sp, [r0, #PREG_SP * 4]
+	str lr, [r0, #PREG_LR * 4]
+	str pc, [r0, #PREG_PC * 4]
 
 	ldr r0, [ip, #PREG_R0 * 4]
 	ldr r1, [ip, #PREG_R1 * 4]
