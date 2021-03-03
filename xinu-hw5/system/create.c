@@ -7,7 +7,7 @@
 /* Embedded XINU, Copyright (C) 2008.  All rights reserved. */
 
 /** 
- * COSC 3250 - Project 5
+ * COSC 3250 - Project 6
  * create process in C
  * @author Matthew Covington Alex Alarcon
  * Instructor Sabirat Rubya
@@ -96,12 +96,13 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	//        va_end macros for variable argument functions
 
 	va_start(ap, nargs);
-	int x = 0;
-	for (x = 0; x < nargs; x++){
-		if (x > 4){
-			saddr[x] = va_arg(ap, int);
+	saddr += pads;
+	int x;
+	for (x = nargs; x > 0; x--){
+		if (nargs - x > 3 ){
+			*(saddr - x) = va_arg(ap, int);
 		} else {
-			ppcb -> regs[x] = va_arg(ap, int);
+			ppcb->regs[nargs - x] = va_arg(ap, int);
 		}
 	}
 	va_end(ap);

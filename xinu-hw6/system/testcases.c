@@ -42,7 +42,7 @@ void testcases(void)
     c = kgetc();
     switch (c)
     {
-    case '0':
+    case '0':   
         // Run 3 processes with varying priorities
         ready(create
               ((void *)printpid, INITSTK, PRIORITY_HIGH, "PRINTER-A", 1,
