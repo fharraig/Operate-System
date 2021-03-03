@@ -97,12 +97,13 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 
 	va_start(ap, nargs);
 	int x = 0;
-	for (x = 0; x < nargs; x++){
-		if (x > 4){
+	while(x < nargs){
+		if (x > 4) {
 			saddr[x] = va_arg(ap, int);
 		} else {
 			ppcb -> regs[x] = va_arg(ap, int);
 		}
+		x++;
 	}
 	va_end(ap);
 }
