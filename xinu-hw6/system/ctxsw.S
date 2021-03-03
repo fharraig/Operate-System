@@ -6,15 +6,6 @@
  */
 /* Embedded XINU, Copyright (C) 2013.  All rights reserved. */
 
-
-/** 
- * COSC 3250 - Project 5
- * context swtich in ARM
- * @author Matthew Covington Alex Alarcon
- * Instructor Sabirat Rubya
- * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
-*/
-
 #include <arm.h>
 
 .text

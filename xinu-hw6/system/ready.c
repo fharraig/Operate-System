@@ -6,6 +6,14 @@
  */
 /* Embedded XINU, Copyright (C) 2008.  All rights reserved. */
 
+/** 
+ * COSC 3250 - Project 6
+ * ready.c 
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
+
 #include <xinu.h>
 
 /**

@@ -7,7 +7,7 @@
 /* Embedded XINU, Copyright (C) 2008.  All rights reserved. */
 
 /** 
- * COSC 3250 - Project 5
+ * COSC 3250 - Project 6
  * create process in C
  * @author Matthew Covington Alex Alarcon
  * Instructor Sabirat Rubya
