@@ -39,7 +39,6 @@ syscall resched(void)
 #if AGING
 
     // TODO: Implement aging.
-    //
     //       Reference include/clock.h to find more information
     //       about the quantums and how aging should behave.
 
