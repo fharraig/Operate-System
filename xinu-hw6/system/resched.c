@@ -8,7 +8,7 @@
 
 /** 
  * COSC 3250 - Project 6
- * resched.c
+ * resched.c implemtation
  * @author Matthew Covington Alex Alarcon
  * Instructor Sabirat Rubya
  * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
@@ -42,6 +42,7 @@ syscall resched(void)
     //       Reference include/clock.h to find more information
     //       about the quantums and how aging should behave.
 
+    
 
 #endif
 

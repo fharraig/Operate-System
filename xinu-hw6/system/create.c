@@ -8,7 +8,7 @@
 
 /** 
  * COSC 3250 - Project 6
- * create process in C
+ * create process in C + priority 
  * @author Matthew Covington Alex Alarcon
  * Instructor Sabirat Rubya
  * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
@@ -62,7 +62,11 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 	// TODO: Setup PCB entry for new process.
 	
 	ppcb -> state = PRSUSP; //set to suspended at first
-	ppcb -> priority = priority; //initiliaze priority of the current proccess
+	if (priority > 2) {
+		ppcb -> priority = priority; //initiliaze priority of the current proccess
+	} else {
+		return SYSERR;
+	}
 	strncpy(ppcb->name, name, PNMLEN); //max size of 16 for names
     ppcb -> stklen = ssize; //size is passed in through create
     ppcb -> stkbase = saddr; //stkbase is the address of the stack (saddr)
@@ -87,7 +91,6 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 	}
 
 	// TODO: Initialize process context.
-
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
 	//        va_end macros for variable argument functions

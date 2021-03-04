@@ -8,7 +8,7 @@
 
 /** 
  * COSC 3250 - Project 6
- * ready.c 
+ * ready.c implementation
  * @author Matthew Covington Alex Alarcon
  * Instructor Sabirat Rubya
  * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
@@ -54,12 +54,14 @@ syscall ready(pid_typ pid, bool resch, uint core)
     //       The core_affinity and priority are values you should 
     //       be able to get from the process's process control block.
 
-    int core = ppcb -> core_affinity;
+    int ccore = ppcb -> core_affinity;
     int prio = ppcb -> priority;
 
-    if (core >= 0 && core <= 3 && prio >= 0 && prio <= 2)
-        readylist[core][prio];
-
+    if (ccore >= 0 && ccore <= 3 && prio >= 0 && prio <= 2)
+        enqueue(pid, readylist[ccore][prio]);
+    else   
+        return SYSERR;
+        
     /* resched if flag is set and if the */
     /* processes affinity is the same as the */
     /* current processor (cpuid)...      */
@@ -68,5 +70,6 @@ syscall ready(pid_typ pid, bool resch, uint core)
         resched();
     }
     restore(im);
+
     return OK;
 }
