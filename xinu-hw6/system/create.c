@@ -33,7 +33,7 @@ void *getstk(ulong);
  * @param nargs    number of arguments that follow
  * @return the new process id
  */
-syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, int priority, ...)
+syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong nargs,...)
 {
 	ulong *saddr;               /* stack address                */
 	ulong pid;                  /* stores new process id        */
@@ -61,12 +61,12 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, int priorit
 	/* setup PCB entry for new proc */
 	// TODO: Setup PCB entry for new process.
 	
-	ppcb->state = PRSUSP;
-	//intialize priority 
-	strncpy(ppcb->name, name, PNMLEN)	; //max size of 16 for names
-    ppcb->stklen = ssize;
-    ppcb->stkbase = saddr;
-	ppcb->core_affinity = -1;
+	ppcb -> state = PRSUSP; //set to suspended at first
+	ppcb -> priority = priority; //initiliaze priority of the current proccess
+	strncpy(ppcb->name, name, PNMLEN); //max size of 16 for names
+    ppcb -> stklen = ssize; //size is passed in through create
+    ppcb -> stkbase = saddr; //stkbase is the address of the stack (saddr)
+	ppcb -> core_affinity = -1; //default core is -1
 
 	/* Initialize stack with accounting block. */
 	*saddr = STACKMAGIC;
@@ -88,24 +88,24 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, int priorit
 
 	// TODO: Initialize process context.
 
-	ppcb -> regs[PREG_SP] = saddr;
-	ppcb -> regs[PREG_LR] = userret;
-	ppcb -> regs[PREG_PC] = funcaddr;
-
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
 	//        va_end macros for variable argument functions
 
 	va_start(ap, nargs);
-	*saddr += pads;
 	int x;
-	for (x = nargs; x > 0; x--){
-		if (nargs - x > 3 ){
-			*(saddr - x) = va_arg(ap, int);
+	for (x = 0; x < nargs; x++){
+		if (x >= 4 ){
+			*(saddr++) = va_arg(ap, int);
 		} else {
-			ppcb->regs[nargs - x] = va_arg(ap, int);
+			ppcb->regs[x] = va_arg(ap, int);
 		}
 	}
+
+	ppcb -> regs[PREG_SP] = saddr;
+	ppcb -> regs[PREG_LR] = userret;
+	ppcb -> regs[PREG_PC] = funcaddr;
+
 	va_end(ap);
 }
 

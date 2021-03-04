@@ -54,8 +54,11 @@ syscall ready(pid_typ pid, bool resch, uint core)
     //       The core_affinity and priority are values you should 
     //       be able to get from the process's process control block.
 
+    int core = ppcb -> core_affinity;
+    int prio = ppcb -> priority;
 
-
+    if (core >= 0 && core <= 3 && prio >= 0 && prio <= 2)
+        readylist[core][prio];
 
     /* resched if flag is set and if the */
     /* processes affinity is the same as the */
