@@ -33,7 +33,7 @@ void *getstk(ulong);
  * @param nargs    number of arguments that follow
  * @return the new process id
  */
-syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
+syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, int priority, ...)
 {
 	ulong *saddr;               /* stack address                */
 	ulong pid;                  /* stores new process id        */
@@ -62,7 +62,8 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	// TODO: Setup PCB entry for new process.
 	
 	ppcb->state = PRSUSP;
-	strncpy(ppcb->name, name, 16)	; //max size of 16 for names
+	//intialize priority 
+	strncpy(ppcb->name, name, PNMLEN)	; //max size of 16 for names
     ppcb->stklen = ssize;
     ppcb->stkbase = saddr;
 	ppcb->core_affinity = -1;
@@ -87,16 +88,16 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 
 	// TODO: Initialize process context.
 
+	ppcb -> regs[PREG_SP] = saddr;
 	ppcb -> regs[PREG_LR] = userret;
 	ppcb -> regs[PREG_PC] = funcaddr;
-	ppcb -> regs[PREG_SP] = saddr;
 
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
 	//        va_end macros for variable argument functions
 
 	va_start(ap, nargs);
-	saddr += pads;
+	*saddr += pads;
 	int x;
 	for (x = nargs; x > 0; x--){
 		if (nargs - x > 3 ){

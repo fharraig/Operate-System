@@ -54,6 +54,7 @@ typedef struct pentry
 {
     int state;                      /**< process state: PRCURR, etc.             */
     void *stkbase;                  /**< base of run time stack                  */
+    int priority;                   /**< priority of the process                 */
     int stklen;                     /**< stack length                            */
     int core_affinity;              /**< core affinity                           */
     char name[PNMLEN];              /**< process name                            */
