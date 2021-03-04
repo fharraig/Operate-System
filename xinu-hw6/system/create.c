@@ -89,7 +89,7 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 
 	ppcb -> regs[PREG_LR] = userret;
 	ppcb -> regs[PREG_PC] = funcaddr;
-	ppcb -> regs[PREG_SP] = ppcb -> stkbase;
+	ppcb -> regs[PREG_SP] = saddr;
 
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
