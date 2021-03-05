@@ -32,6 +32,7 @@ syscall kill(int pid)
 
     _atomic_decrement_pre(&numproc);
 
+    /*
     if (numproc <= 4)
     {
         // all processes are done running
@@ -39,6 +40,7 @@ syscall kill(int pid)
         extern void halt(void);
         halt();
     }
+    */
 
     switch (ppcb->state)
     {

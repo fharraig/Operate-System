@@ -62,6 +62,7 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	// TODO: Setup PCB entry for new process.
 	
 	ppcb->state = PRSUSP;
+
 	strncpy(ppcb->name, name, PNMLEN); //max size of 16 for names
     ppcb->stklen = ssize;
     ppcb->stkbase = saddr;
@@ -86,25 +87,25 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	}
 
 	// TODO: Initialize process context.
-
-	ppcb -> regs[PREG_SP] = saddr;
-	ppcb -> regs[PREG_LR] = userret;
-	ppcb -> regs[PREG_PC] = funcaddr;
-
+	// 			&&
 	// TODO:  Place arguments into activation record.
 	//        See K&R 7.3 for example using va_start, va_arg and
 	//        va_end macros for variable argument functions
 
 	va_start(ap, nargs);
-	saddr += pads;
 	int x;
-	for (x = nargs; x > 0; x--){
-		if (nargs - x > 3 ){
-			*(saddr - x) = va_arg(ap, int);
+	for (x = 0; x < nargs; x++) {
+		if (x >= 4 ) {
+			*(++saddr) = va_arg(ap, int);
 		} else {
-			ppcb->regs[nargs - x] = va_arg(ap, int);
+			ppcb->regs[x] = va_arg(ap, int);
 		}
 	}
+
+	ppcb -> regs[PREG_SP] = saddr;
+	ppcb -> regs[PREG_LR] = userret;
+	ppcb -> regs[PREG_PC] = funcaddr;
+
 	va_end(ap);
 }
 

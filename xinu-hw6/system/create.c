@@ -62,11 +62,13 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 	// TODO: Setup PCB entry for new process.
 	
 	ppcb -> state = PRSUSP; //set to suspended at first
-	if (priority > 2) {
+
+	if (priority <= 2) { //error checking
 		ppcb -> priority = priority; //initiliaze priority of the current proccess
 	} else {
 		return SYSERR;
 	}
+	
 	strncpy(ppcb->name, name, PNMLEN); //max size of 16 for names
     ppcb -> stklen = ssize; //size is passed in through create
     ppcb -> stkbase = saddr; //stkbase is the address of the stack (saddr)
@@ -97,12 +99,12 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 
 	va_start(ap, nargs);
 	int x;
-	for (x = 0; x < nargs; x++){
-		if (x >= 4 ){
-			*(saddr++) = va_arg(ap, int);
-		} else {
+	for (x = 0; x < nargs; x++) {
+		if (x >= 4 ) {
+			*(++saddr) = va_arg(ap, int);
+		 } else {
 			ppcb->regs[x] = va_arg(ap, int);
-		}
+		 }
 	}
 
 	ppcb -> regs[PREG_SP] = saddr;
