@@ -106,6 +106,8 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	ppcb -> regs[PREG_PC] = funcaddr;
 
 	va_end(ap);
+	
+	return pid;
 }
 
 /**

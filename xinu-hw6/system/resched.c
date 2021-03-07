@@ -37,12 +37,18 @@ syscall resched(void)
 
     im = disable();
 
+    int x = QUANTUM;
+    int y = QUANTUM;
+    int z = QUANTUM;
+
 #if AGING
 
     // TODO: Implement aging.
     //       Reference include/clock.h to find more information
     //       about the quantums and how aging should behave.
+
     
+
 
 #endif
 
