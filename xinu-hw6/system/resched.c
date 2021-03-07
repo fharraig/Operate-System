@@ -23,6 +23,7 @@ extern void ctxsw(void *, void *);
  * gives correct NEXT state for current process if other than PRREADY.
  * @return OK when the process is context switched back
  */
+
 syscall resched(void)
 {
     int highest_prio;
@@ -41,7 +42,6 @@ syscall resched(void)
     // TODO: Implement aging.
     //       Reference include/clock.h to find more information
     //       about the quantums and how aging should behave.
-
     
 
 #endif

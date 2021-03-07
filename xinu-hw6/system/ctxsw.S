@@ -64,8 +64,8 @@ ctxsw:
 	ldr r9, [ip, #PREG_R9 * 4]
 	ldr r10, [ip, #PREG_R10 * 4]
 	ldr r11, [ip, #PREG_R11 * 4]
-	ldr sp, [r0, #PREG_SP * 4]
-	ldr lr, [r0, #PREG_LR * 4]
-	ldr pc, [r0, #PREG_PC * 4]
+	ldr sp, [ip, #PREG_SP * 4]
+	ldr lr, [ip, #PREG_LR * 4]
+	ldr pc, [ip, #PREG_PC * 4]
 
 	.end ctxsw

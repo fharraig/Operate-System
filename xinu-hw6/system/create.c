@@ -63,7 +63,7 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 	
 	ppcb -> state = PRSUSP; //set to suspended at first
 
-	if (priority <= 2) { //error checking
+	if (priority >= 0 && priority <= 2) { //error checking
 		ppcb -> priority = priority; //initiliaze priority of the current proccess
 	} else {
 		return SYSERR;

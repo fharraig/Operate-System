@@ -62,7 +62,6 @@ syscall create(void *funcaddr, ulong ssize, char *name, ulong nargs, ...)
 	// TODO: Setup PCB entry for new process.
 	
 	ppcb->state = PRSUSP;
-
 	strncpy(ppcb->name, name, PNMLEN); //max size of 16 for names
     ppcb->stklen = ssize;
     ppcb->stkbase = saddr;
