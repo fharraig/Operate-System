@@ -51,7 +51,6 @@ syscall resched(void)
             enqueue(pid, readylist[cpuid][PRIORITY_HIGH]);
         }
         promote_medium[cpuid] = QUANTUM;
-        
         promote_low[cpuid]--;
         if (promote_low[cpuid] <= 0) {
             if (nonempty(readylist[cpuid][PRIORITY_LOW])) {

@@ -102,9 +102,9 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 	for (x = 0; x < nargs; x++) {
 		if (x >= 4 ) {
 			*(++saddr) = va_arg(ap, int);
-		 } else {
+		} else {
 			ppcb->regs[x] = va_arg(ap, int);
-		 }
+		}
 	}
 
 	ppcb -> regs[PREG_SP] = saddr;
