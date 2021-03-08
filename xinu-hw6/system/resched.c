@@ -36,10 +36,7 @@ syscall resched(void)
     oldproc = &proctab[currpid[cpuid]];
 
     im = disable();
-
-    int x = QUANTUM;
-    int y = QUANTUM;
-    int z = QUANTUM;
+    pid_typ pid;
 
 #if AGING
 
@@ -47,9 +44,24 @@ syscall resched(void)
     //       Reference include/clock.h to find more information
     //       about the quantums and how aging should behave.
 
+    promote_medium[cpuid]--;
+    if (promote_medium[cpuid] <= 0) {
+        if (nonempty(readylist[cpuid][PRIORITY_MED])) {
+            pid = dequeue(readylist[cpuid][PRIORITY_MED]);
+            enqueue(pid, readylist[cpuid][PRIORITY_HIGH]);
+        }
+        promote_medium[cpuid] = QUANTUM;
+        
+        promote_low[cpuid]--;
+        if (promote_low[cpuid] <= 0) {
+            if (nonempty(readylist[cpuid][PRIORITY_LOW])) {
+                pid = dequeue(readylist[cpuid][PRIORITY_LOW]);
+                enqueue(pid, readylist[cpuid][PRIORITY_MED]);
+            }
+            promote_low[cpuid] = QUANTUM;
+        }
+    }
     
-
-
 #endif
 
     /* place current process at end of ready queue */

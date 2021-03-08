@@ -25,6 +25,18 @@ void printpid(int times)
     }
 }
 
+/* void infinite(){
+    int yes = 9;
+    while (yes > 0) {
+        kprintf("Hello \r \n");
+    }
+}
+
+void printMe(){
+    kprintf("Please print me \r \n");
+}
+*/ 
+
 /**
  * testcases - called after initialization completes to test things.
  */
@@ -64,13 +76,16 @@ void testcases(void)
 
         // TODO: Create a testcase that demonstrates aging 
 
+/*      ready(create((void *)infinite, INITSTK, PRIORITY_HIGH, "TEST3", 1, 5), RESCHED_YES, 0);
+        ready(create((void *)printpid, INITSTK, PRIORITY_MED, "TEST1", 1, 5), RESCHED_YES, 0);
+        ready(create((void *)printMe, INITSTK, PRIORITY_LOW, "TEST2", 1, 5), RESCHED_YES, 0);
+*/ 
 
 #else
         // STARVING TESTCASE
         kprintf("\r\nAGING is not currently enabled.\r\n");
 
         // TODO: Create a testcase that demonstrates starvation
-
 
 #endif
         break;
