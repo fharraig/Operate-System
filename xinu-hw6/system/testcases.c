@@ -25,18 +25,22 @@ void printpid(int times)
     }
 }
 
-void infinite(){
+void infinite() {
+    enable();
     int x = 0;
-    while (x < 10000){
+    while (x < 100){
         kprintf("Hello \r \n");
+        udelay(1);
         x++;
     }
 }
 
-void infinite1(){
+void infinite1() {
+    enable();
     int y = 0;
-    while (y < 2000){
+    while (y < 100){
         kprintf("Goodbye \r \n");
+        udelay(1);
         y++;
     }
 }
