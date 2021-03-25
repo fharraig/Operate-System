@@ -51,15 +51,18 @@ void *getmem(ulong nbytes)
     lock_acquire(freelist[cpuid].memlock);
 
     curr = freelist[cpuid].head;
+    *prev = *curr;
     
     while (curr -> next != NULL) {
-        if (curr -> length < nbytes){
+        if (curr -> length < nbytes) { //not enough space, keeps looping to find spot where there is enough spcae
             *prev = *curr;
             *curr = *curr -> next;
-        } else if (curr -> length == nbytes) {
+        } else if (curr -> length == nbytes) { //takes out the curr from the list
+            *prev -> next = *curr -> next;
+            *curr -> next = *curr;
             lock_release(freelist[cpuid].memlock);
             return (void *)curr;
-        } else if (curr -> length > nbytes) { 
+        } else if (curr -> length > nbytes) { //keeps the leftover memory in the current spot, takes the used memory out of the list 
             left = curr -> length - nbytes;
             leftover -> length = left;
             *leftover -> next = *curr -> next;
