@@ -32,6 +32,8 @@ syscall kill(int pid)
 
     _atomic_decrement(&numproc);
 
+    freemem(ppcb -> stkbase, ppcb -> stklen);
+
     if (numproc <= 4)
     {
         // all processes are done running

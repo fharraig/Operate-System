@@ -46,6 +46,33 @@ void *getmem(ulong nbytes)
      *      - return memory address if successful
      */
 
+    int cpuid = getcpuid(); 
+    int left;
+    lock_acquire(freelist[cpuid].memlock);
+
+    curr = freelist[cpuid].head;
+    
+    while (curr -> next != NULL) {
+        if (curr -> length < nbytes){
+            *prev = *curr;
+            *curr = *curr -> next;
+        } else if (curr -> length == nbytes) {
+            lock_release(freelist[cpuid].memlock);
+            return (void *)curr;
+        } else if (curr -> length > nbytes) { 
+            left = curr -> length - nbytes;
+            leftover -> length = left;
+            *leftover -> next = *curr -> next;
+            *curr -> next = *curr;
+            *prev -> next = *leftover;
+            lock_release(freelist[cpuid].memlock);
+            return (void *)curr;
+        } else {
+            kprintf("how did you get here \r\n");
+        }
+    }
+    
+
     restore(im);
     return (void *)SYSERR;
 }
