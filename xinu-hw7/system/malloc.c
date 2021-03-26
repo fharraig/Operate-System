@@ -36,16 +36,16 @@ void *malloc(ulong size)
       *      3) Set accounting info in pmem
       */  
 
-     int newsize = size + sizeof(pmem);
+    int newsize = size + sizeof(pmem);
 
-     if (getmem(newsize) == SYSERR) {
-         return SYSERR;
-     }
+    pmem = getmem(newsize);
 
-     getmem(newsize);
+    if (pmem == SYSERR) {
+        return NULL;
+    }
 
-
-
+    pmem -> next = pmem; 
+    pmem -> length = newsize;
 
     return (void *)(pmem + 1);  /* +1 to skip accounting info */
 }

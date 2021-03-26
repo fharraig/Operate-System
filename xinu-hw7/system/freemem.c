@@ -49,9 +49,22 @@ syscall freemem(void *memptr, ulong nbytes)
      *      - Find top of previous memblock
      *      - Make sure block is not overlapping on prev or next blocks
      *      - Coalesce with previous block if adjacent
-     *      - Coalesce with next block if adjacent
+     *      - Coalesce with next block if adjacent 
      */
 
+
+    //check if memory blocks are next to each other, combine if they are
+    //check top of prev and bottom or curr || top of curr and bottom of next
+
+    int cpuid;
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (block >= freelist[i].base && block < freelist[i].base + freelist[i].bound) {
+            cpuid = i;
+        } 
+    }
+
+    lock_acquire(freelist[cpuid].memlock);
     
 
 	restore(im);

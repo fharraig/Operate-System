@@ -23,6 +23,7 @@ extern int _atomic_increment_mod(int *, int);
 
 static pid_typ newpid(void);
 void userret(void);
+void *getstk(ulong);
 
 /**
  * Create a new process to start running a function.
@@ -46,7 +47,7 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
 		ssize = MINSTK;
 	ssize = (ulong)(ssize + 3) & 0xFFFFFFFC;
 	/* round up to even boundary    */
-	saddr = (ulong *)getmem(ssize);     /* allocate new stack and pid   */
+	saddr = (ulong *)getstk(ssize);     /* allocate new stack and pid   */
 	pid = newpid();
 	/* a little error checking      */
 	if ((((ulong *)SYSERR) == saddr) || (SYSERR == pid))
@@ -73,9 +74,7 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
     ppcb -> stkbase = saddr; //stkbase is the address of the stack (saddr)
 	ppcb -> core_affinity = -1; //default core is -1
 
-	
 	/* Initialize stack with accounting block. */
-	saddr = ((ulong) saddr) + ssize - 4;
 	*saddr = STACKMAGIC;
 	*--saddr = pid;
 	*--saddr = ppcb->stklen;

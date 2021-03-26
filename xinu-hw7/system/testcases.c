@@ -45,6 +45,24 @@ void infinite1() {
     }
 }
 
+//helper function to print freelist
+void printFreelist(){
+    memblk *curr;
+    int i = 0;
+   while(i < 4) {
+       struct memhead freehead = freelist[i];
+        curr = freehead.head;
+        kprintf("Core = %d \r\n", i);
+        while (curr != NULL) {
+            kprintf("curr -> length = %d \r\n", curr->length);
+            kprintf("curr = %d \r\n", curr);
+            curr = curr -> next;
+        }
+        //kprintf("hello \r\n");
+       i++;
+    }
+}
+
 /**
  * testcases - called after initialization completes to test things.
  */
@@ -56,6 +74,9 @@ void testcases(void)
     kprintf("0) Test priority scheduling\r\n");
     kprintf("\'A\') Aging / Starvation testcase\r\n");
     kprintf("\'P\') Preemption testcase\r\n");
+    kprintf("\'F\') Print the freelist \r\n");
+    kprintf("\'G\') Test whether or not created processes are taking up the freelist \r\n");
+    kprintf("\'C\') Coalescensce testing \r\n");
 
     // TODO: Test your operating system!
 
@@ -124,6 +145,23 @@ void testcases(void)
 #else
         kprintf("\r\nPreemption is not currently enabled...\r\n");
 #endif
+        break;
+
+    case 'f':
+    case 'F':
+        printFreelist();
+        break;
+
+    case 'g':
+    case 'G':
+        printFreelist();
+        getmem(10000);
+        printFreelist();
+        break;
+
+    case 'c':
+    case 'C':
+        kprintf("Soon .... \r\n");
         break;
 
     default:

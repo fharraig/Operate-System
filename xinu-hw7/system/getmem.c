@@ -48,33 +48,33 @@ void *getmem(ulong nbytes)
 
     int cpuid = getcpuid(); 
     int left;
+
     lock_acquire(freelist[cpuid].memlock);
 
     curr = freelist[cpuid].head;
-    *prev = *curr;
+    prev = curr;
     
-    while (curr -> next != NULL) {
+    while (curr != NULL) {
         if (curr -> length < nbytes) { //not enough space, keeps looping to find spot where there is enough spcae
-            *prev = *curr;
-            *curr = *curr -> next;
+            prev = curr;
+            curr = curr -> next;
         } else if (curr -> length == nbytes) { //takes out the curr from the list
-            *prev -> next = *curr -> next;
-            *curr -> next = *curr;
+            prev -> next = curr -> next;
+            curr -> length -= nbytes;
             lock_release(freelist[cpuid].memlock);
             return (void *)curr;
         } else if (curr -> length > nbytes) { //keeps the leftover memory in the current spot, takes the used memory out of the list 
             left = curr -> length - nbytes;
-            leftover -> length = left;
-            *leftover -> next = *curr -> next;
-            *curr -> next = *curr;
-            *prev -> next = *leftover;
+            curr -> length = left;
+            leftover -> length = nbytes;
             lock_release(freelist[cpuid].memlock);
-            return (void *)curr;
+            return (void *)leftover;    
         } else {
-            kprintf("how did you get here \r\n");
+            kprintf("how did you even get here \r\n");
         }
     }
     
+    lock_release(freelist[cpuid].memlock);
 
     restore(im);
     return (void *)SYSERR;
