@@ -49,18 +49,18 @@ void infinite1() {
 void printFreelist(){
     memblk *curr;
     int i = 0;
-   while(i < 4) {
-       struct memhead freehead = freelist[i];
-        curr = freehead.head;
-        kprintf("Core = %d \r\n", i);
-        while (curr != NULL) {
-            kprintf("curr -> length = %d \r\n", curr->length);
-            kprintf("curr = %d \r\n", curr);
-            curr = curr -> next;
-        }
+   //while(i < 4) {
+       struct memhead freehead = freelist[0];
+       curr = freehead.head;
+       kprintf("Core = %d \r\n", i);
+       while (curr != NULL) {
+           kprintf("curr -> length = %d \r\n", curr->length);
+           kprintf("curr = %d \r\n", curr);
+           curr = curr -> next;
+       }
         //kprintf("hello \r\n");
-       i++;
-    }
+      // i++;
+   // }
 }
 
 /**

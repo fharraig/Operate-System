@@ -36,14 +36,15 @@ void *malloc(ulong size)
       *      3) Set accounting info in pmem
       */  
 
-    int newsize = size + sizeof(pmem);
+    int newsize = size + sizeof(pmem); //add space for accounting information on top of the bytes requested
 
-    pmem = getmem(newsize);
+    pmem = getmem(newsize); //passes in bytes requested to be used for math, returns a pointer to the allocated memory block
 
-    if (pmem == SYSERR) {
+    if (pmem == SYSERR) { //if getmem failed for whatever reason, return NULL
         return NULL;
     }
-
+    
+    //set accounting information of returned block
     pmem -> next = pmem; 
     pmem -> length = newsize;
 
