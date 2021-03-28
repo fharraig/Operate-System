@@ -24,7 +24,10 @@ syscall free(void *ptr)
      *      3) call freemem on the block with its length
      */
 
-    
+    block = ptr;
+    int length = block -> length;
+    //kprintf("block -> length = %d \r\n", length);
+    freemem(block, length);
 
     return OK;
 }

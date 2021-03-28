@@ -65,7 +65,7 @@ syscall freemem(void *memptr, ulong nbytes)
     }
 
     lock_acquire(freelist[cpuid].memlock);
-    
+      
 
 	restore(im);
     return OK;
