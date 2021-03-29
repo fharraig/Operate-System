@@ -55,15 +55,15 @@ void *getmem(ulong nbytes)
     curr = freelist[cpuid].head; //head points to the first block in the freelist
     prev = NULL;
     
-    while (curr != NULL) {
+    while (curr != NULL) { //loops through the whole freelist until it finds a place to put new memory
         if (curr -> length < nbytes) { //not enough space, keeps looping to find spot where there is enough spcae
             prev = curr;
             curr = curr -> next;
         } else if (curr -> length >= nbytes) { //sets accounting info of leftover memblock to act as new curr, returns old curr to be changed in malloc
             left = curr -> length - nbytes; //decrements length of the current memblock
             free = freelist[cpuid].length - nbytes; //decrements overall length of the freelist
-
-            leftover = curr + (nbytes/8); //set the address of the leftover memory block, divided by 8 to convert bytes to bits
+            
+            leftover = (memblk *) (curr + (nbytes/8)); //set the address of the leftover memory block, divided by 8 to convert bytes to bits, cast to a memblock to avoid type confusion
             leftover -> next = curr -> next; //takes the place of curr, so has the same next
             leftover -> length = left; //leftover memory after nbytes are taken away from it
 
@@ -71,22 +71,23 @@ void *getmem(ulong nbytes)
                 leftover = curr -> next;
 
             freelist[cpuid].length = free; //leftover overall memory after nbytes are taken out
-
+            
             if (prev == NULL) //if the memory block is the first in the list, sets the freelist.head to the new memblock, keeping prev as null for future runs
                 freelist[cpuid].head = leftover;
             else  //otherwise, puts the new memblock after the previous one
                 prev -> next = leftover; 
 
             lock_release(freelist[cpuid].memlock);
+            restore(im);
             return curr;   //curr doesnt have to be modified in this function because it gets the necessary accounting info from malloc
         } else {
             kprintf("how did you even get here \r\n");
+            restore(im);
             return (void *)SYSERR;
         }
     }
     
     lock_release(freelist[cpuid].memlock);
-
     restore(im);
     return (void *)SYSERR;
 }

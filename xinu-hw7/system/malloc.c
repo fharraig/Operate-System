@@ -38,9 +38,10 @@ void *malloc(ulong size)
 
     int newsize = size + sizeof(pmem); //add space for accounting information on top of the bytes requested
 
+    //kprintf("newsize = %d \r\n", newsize);
     pmem = getmem(newsize); //passes in bytes requested to be used for math, returns a pointer to the allocated memory block
 
-    if (pmem == SYSERR) { //if getmem failed for whatever reason, return NULL
+    if (pmem == (void *)SYSERR) { //if getmem failed for whatever reason, return NULL
         return NULL;
     }
     

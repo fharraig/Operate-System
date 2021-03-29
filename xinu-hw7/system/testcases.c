@@ -49,17 +49,17 @@ void infinite1() {
 void printFreelist(){
     memblk *curr;
     int i = 0;
-   //while(i < 4) {
-       struct memhead freehead = freelist[0];
-       curr = freehead.head;
-       kprintf("Core = %d \r\n", i);
+    int j = 0;
+  // while(i < 4) {
+       curr = freelist[0].head;
+     //  kprintf("Current Core = %d \r\n", i);
        while (curr != NULL) {
-           kprintf("curr -> length = %d \r\n", curr->length);
+           kprintf("block #%d -> length = %d \r\n", j, curr->length);
            kprintf("curr = %d \r\n", curr);
            curr = curr -> next;
+           j++;
        }
-        //kprintf("hello \r\n");
-      // i++;
+     //   i++;
    // }
 }
 
@@ -68,15 +68,17 @@ void printFreelist(){
  */
 void testcases(void)
 {
+
+    struct memblock *testMe;
     uchar c;
 
     kprintf("===TEST BEGIN===\r\n");
     kprintf("0) Test priority scheduling\r\n");
     kprintf("\'A\') Aging / Starvation testcase\r\n");
     kprintf("\'P\') Preemption testcase\r\n");
-    kprintf("\'F\') Print the freelist \r\n");
-    kprintf("\'G\') Test whether or not created processes are taking up the freelist \r\n");
-    kprintf("\'C\') Coalescensce testing \r\n");
+    kprintf("\'F\') Print the Freelist! \r\n");
+    kprintf("\'G\') GetMem / Malloc testing \r\n");
+    kprintf("\'C\') FreeMem (coalescence) / Free testing \r\n");
 
     // TODO: Test your operating system!
 
@@ -155,13 +157,19 @@ void testcases(void)
     case 'g':
     case 'G':
         printFreelist();
-        getmem(10000);
+        malloc(10000); //malloc contains a call to the getmem function so it doesnt need to be called here
+        printFreelist();
+        malloc(40000);
         printFreelist();
         break;
 
     case 'c':
     case 'C':
-        kprintf("Soon .... \r\n");
+        testMe -> length = 10000;
+        testMe -> next = testMe;
+        printFreelist();
+        free((void *)testMe);
+        printFreelist();
         break;
 
     default:
