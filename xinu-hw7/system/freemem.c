@@ -90,7 +90,7 @@ syscall freemem(void *memptr, ulong nbytes)
 
     //check for coalescence with prev block, combine the two if yes, wouldnt even have to check if the prev is still null (i.e. block is in head (first) spot)
     if (prev != NULL) {
-        if ((prev + prev -> length / 8) >= block) { //if the address of the prev is overlapping the address of the block, combine the two
+        if ((prev + (prev -> length / 8)) >= block) { //if the address of the prev is overlapping the address of the block, combine the two
             prev -> length += block -> length;
             prev -> next = next; //takes out block, just keeps previous but with added length 
         }
@@ -98,7 +98,7 @@ syscall freemem(void *memptr, ulong nbytes)
 
     //check for coalescence with next block, combine the two if yes, doesnt even have to check if next is null (i.e. block is in last spot)
     if (next != NULL){
-        if ((block + block -> length / 8) >= next) { //if the address of the block is overlapping the address of the next, combine the two
+        if ((block + (block -> length / 8)) >= next) { //if the address of the block is overlapping the address of the next, combine the two
             block -> next = next -> next;
             next -> length += block -> length; //takes out block, just keeps next, but with added length
         }

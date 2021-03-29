@@ -27,7 +27,7 @@ syscall free(void *ptr)
     block = ptr; //?????
     int length = block -> length;
 
-    if (length == 0 || block -> next != block)
+    if (length == 0)
         return SYSERR;
 
     freemem(block, length);
