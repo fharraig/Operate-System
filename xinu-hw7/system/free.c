@@ -24,7 +24,7 @@ syscall free(void *ptr)
      *      3) call freemem on the block with its length
      */
 
-    block = ptr; //?????
+    block = ptr; 
     int length = block -> length;
 
     if (length == 0)
