@@ -79,7 +79,7 @@ void *getmem(ulong nbytes)
 
             lock_release(freelist[cpuid].memlock);
             restore(im);
-            return curr;   //curr doesnt have to be modified in this function because it gets the necessary accounting info from malloc
+            return (void *)curr;   //curr doesnt have to be modified in this function because it gets the necessary accounting info from malloc
         } else {
             kprintf("how did you even get here \r\n");
             lock_release(freelist[cpuid].memlock);

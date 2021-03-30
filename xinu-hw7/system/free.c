@@ -25,9 +25,9 @@ syscall free(void *ptr)
      */
 
     block = (struct memblock *)ptr;
-    ulong length = block -> length; //maybe + 8 bc of accounting info?
+    ulong length = block -> length; 
 
-    if (length == 0 || block -> next != block) 
+    if (length == 0 || block -> next != block) //basic error checking to make sure freemem will actually work
         return SYSERR;
     
     freemem(block, length);
