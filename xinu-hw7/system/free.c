@@ -25,12 +25,11 @@ syscall free(void *ptr)
      */
 
     block = (struct memblock *)ptr;
-    ulong length = block -> length;
+    ulong length = block -> length; //maybe + 8 bc of accounting info?
 
     if (length == 0 || block -> next != block) 
         return SYSERR;
-
-   // kprintf("free hello \r\n");
+    
     freemem(block, length);
 
     return OK;
