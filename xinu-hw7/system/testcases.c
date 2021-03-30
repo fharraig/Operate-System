@@ -49,16 +49,15 @@ void infinite1() {
 void printFreelist(){
     memblk *curr;
     int i = 0;
-  // while(i < 4) {
+    while(i < 4) {
        curr = freelist[0].head;
-     //  kprintf("Current Core = %d \r\n", i);
        while (curr != NULL) {
            kprintf("curr -> length = %d \r\n", curr->length);
            kprintf("curr = %d \r\n", curr);
            curr = curr -> next;
        }
-     //   i++;
-   // }
+       i++;
+    }
 }
 
 /**

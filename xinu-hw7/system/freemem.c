@@ -25,7 +25,8 @@ syscall freemem(void *memptr, ulong nbytes)
 {
     register struct memblock *block, *next, *prev;
     irqmask im;
-    //ulong top;
+    ulong ptop;
+    ulong btop;
 
     /* make sure block is in heap */
     if ((0 == nbytes)
@@ -82,27 +83,33 @@ syscall freemem(void *memptr, ulong nbytes)
     block -> length = nbytes;
     block -> next = next; 
 
-    //checks to see if the block was placed in the first spot, if yes, sets it equal to head for future use, otherwise, set after prev
-     if (prev == NULL)
+    //checks to see if the block was placed in the first spot, if yes, sets it equal to head for future use, keeping prev as null, otherwise, set after prev
+     if (prev == NULL) 
         freelist[cpuid].head = block;
     else //otherwise, sets it after previous 
         prev -> next = block;
 
-    //check for coalescence with next block, combine the two if yes
-    if ((struct memblock *) (block + block -> length / 8) >= next) { //if the address of the block is overlapping the address of the next, combine the two
-            block -> next = next -> next;
-            block -> length += next -> length; //takes out block, just keeps next, but with added length
-    }
+    //using the same address logic as was used in getmem to find the top of the prev and the next blocks
+    ptop = (ulong) (prev + (prev -> length/8));
+    btop = (ulong) (block + (block -> length/8));
 
     //check for coalescence with prev block, combine the two if yes, wouldnt even have to check if the prev is still null (i.e. block is in head (first) spot)
     if (prev != NULL) {
-        if ((struct memblock *) (prev + prev -> length / 8) >= block) { //if the address of the prev is overlapping the address of the block, combine the two
+        if (ptop >= (ulong)(block)) { //if the address of the prev is overlapping the address of the block, combine the two
             prev -> length += block -> length;
             prev -> next = next; //takes out block, just keeps previous but with added length 
         }
     }
     
-    freelist[cpuid].length += nbytes; //increments the overall length of the freelist by nbytes
+    //check for coalescence with next block, combine the two if yes, dont need to check if next is null (i.e. block is going at the end of the list)
+    if (next != NULL) {
+        if (btop >= (ulong)(next)) { //if the address of the block is overlapping the address of the next, combine the two
+                block -> next = next -> next;
+                block -> length += next -> length; //takes out block, just keeps next, but with added length
+        }
+    }
+
+    freelist[cpuid].length += nbytes; //increments the overall length of the freelist by nbytes, as more space was added
 
     lock_release(freelist[cpuid].memlock);
 	restore(im);

@@ -18,6 +18,8 @@ syscall free(void *ptr)
 {
     struct memblock *block;
 
+    ulong length;
+
 	/* TODO:
      *      1) set block to point to memblock to be free'd (ptr)
      *      2) find accounting information of the memblock
@@ -25,9 +27,9 @@ syscall free(void *ptr)
      */
 
     block = (struct memblock *)ptr;
-    ulong length = block -> length; 
+    length = block -> length; 
 
-    if (length == 0 || block -> next != block) //basic error checking to make sure freemem will actually work
+    if (length == 0 || block -> next != block) //basic error checking to make sure malloc worked properly
         return SYSERR;
     
     freemem(block, length);
