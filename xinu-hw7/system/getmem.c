@@ -63,7 +63,7 @@ void *getmem(ulong nbytes)
             left = curr -> length - nbytes; //decrements length of the current memblock
             free = freelist[cpuid].length - nbytes; //decrements overall length of the freelist
             
-            leftover = curr + nbytes; //set the address of the leftover memory block, divided by 8 to convert bytes to bits, cast to a memblock to avoid type confusion
+            leftover = (struct memblock *) (curr + (nbytes/8)); //set the address of the leftover memory block, divided by 8 to convert bytes to bits, cast to a memblock to avoid type confusion
             leftover -> next = curr -> next; //takes the place of curr, so has the same next
             leftover -> length = left; //leftover memory after nbytes are taken away from it
 
@@ -71,7 +71,7 @@ void *getmem(ulong nbytes)
                 leftover = curr -> next;
 
             freelist[cpuid].length = free; //leftover overall memory after nbytes are taken out
-            
+
             if (prev == NULL) //if the memory block is the first in the list, sets the freelist.head to the new memblock, keeping prev as null for future runs
                 freelist[cpuid].head = leftover;
             else  //otherwise, puts the new memblock after the previous one
@@ -79,7 +79,7 @@ void *getmem(ulong nbytes)
 
             lock_release(freelist[cpuid].memlock);
             restore(im);
-            return (void *)curr;   //curr doesnt have to be modified in this function because it gets the necessary accounting info from malloc
+            return curr;   //curr doesnt have to be modified in this function because it gets the necessary accounting info from malloc
         } else {
             kprintf("how did you even get here \r\n");
             lock_release(freelist[cpuid].memlock);
