@@ -38,7 +38,7 @@ void infinite() {
 void infinite1() {
     enable();
     int y = 0;
-    while (y < 10){
+    while (y < 10) {
         kprintf("Goodbye \r \n");
         udelay(1);
         y++;
@@ -49,15 +49,13 @@ void infinite1() {
 void printFreelist(){
     memblk *curr;
     int i = 0;
-    int j = 0;
   // while(i < 4) {
        curr = freelist[0].head;
      //  kprintf("Current Core = %d \r\n", i);
        while (curr != NULL) {
-           kprintf("block #%d -> length = %d \r\n", j, curr->length);
+           kprintf("curr -> length = %d \r\n", curr->length);
            kprintf("curr = %d \r\n", curr);
            curr = curr -> next;
-           j++;
        }
      //   i++;
    // }
@@ -70,6 +68,7 @@ void testcases(void)
 {
 
     struct memblock *testMe;
+
     uchar c;
 
     kprintf("===TEST BEGIN===\r\n");
@@ -157,19 +156,25 @@ void testcases(void)
     case 'g':
     case 'G':
         printFreelist();
+        kprintf("Malloc called on 10000 bytes \r\n");
         malloc(10000); //malloc contains a call to the getmem function so it doesnt need to be called here
         printFreelist();
+        kprintf("Malloc called on 40000 bytes \r\n");
         malloc(40000);
         printFreelist();
         break;
 
     case 'c':
     case 'C':
+        /* 
         testMe -> length = 10000;
         testMe -> next = testMe;
-        printFreelist();
+        testMe = testMe + testMe -> length / 8;
+        printFreelist(); 
+        kprintf("Free called on 10000 bytes \r\n");
         free((void *)testMe);
         printFreelist();
+        */
         break;
 
     default:

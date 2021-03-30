@@ -24,12 +24,13 @@ syscall free(void *ptr)
      *      3) call freemem on the block with its length
      */
 
-    block = ptr; 
-    int length = block -> length;
+    block = (struct memblock *)ptr;
+    ulong length = block -> length;
 
-    if (length == 0)
+    if (length == 0 || block -> next != block) 
         return SYSERR;
 
+   // kprintf("free hello \r\n");
     freemem(block, length);
 
     return OK;

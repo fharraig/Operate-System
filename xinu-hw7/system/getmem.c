@@ -63,7 +63,7 @@ void *getmem(ulong nbytes)
             left = curr -> length - nbytes; //decrements length of the current memblock
             free = freelist[cpuid].length - nbytes; //decrements overall length of the freelist
             
-            leftover = (memblk *) (curr + (nbytes/8)); //set the address of the leftover memory block, divided by 8 to convert bytes to bits, cast to a memblock to avoid type confusion
+            leftover = (struct memblock *) (curr + (nbytes/8)); //set the address of the leftover memory block, divided by 8 to convert bytes to bits, cast to a memblock to avoid type confusion
             leftover -> next = curr -> next; //takes the place of curr, so has the same next
             leftover -> length = left; //leftover memory after nbytes are taken away from it
 

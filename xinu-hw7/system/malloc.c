@@ -36,11 +36,11 @@ void *malloc(ulong size)
       *      3) Set accounting info in pmem
       */  
 
-    int newsize = size + sizeof(pmem); //add space for accounting information on top of the bytes requested
+    ulong newsize = size + sizeof(struct memblock); //add space for accounting information on top of the bytes requested
 
-    pmem = getmem(newsize); //returns a pointer to the allocated memory block
+    pmem = (struct memblock *)getmem(newsize); //returns a pointer to the allocated memory block
 
-    if (pmem == SYSERR) { //if getmem failed for whatever reason, return NULL
+    if (pmem == (void *)SYSERR) { //if getmem failed for whatever reason, return NULL
         return NULL;
     }
     
