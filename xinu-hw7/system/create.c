@@ -73,6 +73,8 @@ syscall create(void *funcaddr, ulong ssize, ulong priority, char *name, ulong na
     ppcb -> stkbase = saddr; //stkbase is the address of the stack (saddr)
 	ppcb -> core_affinity = -1; //default core is -1
 
+	saddr = ((ulong)saddr) + ssize + 4; //?????
+	
 	/* Initialize stack with accounting block. */
 	*saddr = STACKMAGIC;
 	*--saddr = pid;

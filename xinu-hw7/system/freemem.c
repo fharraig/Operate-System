@@ -97,7 +97,7 @@ syscall freemem(void *memptr, ulong nbytes)
     if (next != NULL) {
         if (btop >= (ulong)(next)) { //if the address of the block is overlapping the address of the next, combine the two
                 block -> next = next -> next;
-                block -> length += next -> length; //takes out block, just keeps next, but with added length
+                block -> length += next -> length; //takes out next, just keeps block, but with added length
         }
     }
 

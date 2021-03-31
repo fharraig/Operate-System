@@ -60,7 +60,7 @@ void *getmem(ulong nbytes)
             prev = curr;
             curr = curr -> next;
         } else if (curr -> length >= nbytes) { //sets accounting info of leftover memblock to act as new curr, returns old curr to be changed in malloc
-            
+        
             left = curr -> length - nbytes; //decrements length of the current memblock
             free = freelist[cpuid].length - nbytes; //decrements overall length of the freelist
             
