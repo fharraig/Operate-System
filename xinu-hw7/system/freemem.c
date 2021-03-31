@@ -101,7 +101,8 @@ syscall freemem(void *memptr, ulong nbytes)
         }
     }
 
-    //i checked next first because if the length of the block is changed, we want to be able to account for that change in length during this check
+    //i know the TODO says to check prev first
+    //but i checked next first because if the length of the block is changed, we want to be able to account for that change in length during this check
     //if we checked for prev first, the change in block length during the next if statement would go unnoticed by the program without extraneous help
 
     //check for coalescence with prev block, combine the two if yes, wouldnt even have to check if the prev is still null (i.e. block is in head (first) spot)

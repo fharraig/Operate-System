@@ -26,8 +26,8 @@ syscall free(void *ptr)
      *      3) call freemem on the block with its length
      */
 
-    block = (struct memblock *)ptr;
-    length = block -> length; 
+    block = (struct memblock *)ptr; //cast ptr to a memblock
+    length = block -> length; //find length of the memblock to be freed
 
     if (length == 0 || block -> next != block) //basic error checking to make sure malloc worked properly
         return SYSERR;
