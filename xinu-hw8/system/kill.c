@@ -40,7 +40,7 @@ syscall kill(int pid)
 //              halt();
     }
 
-    freemem(ppcb -> stkbase, ppcb -> stklen);
+    //freemem(ppcb -> stkbase, ppcb -> stklen);
 
     switch (ppcb->state)
     {

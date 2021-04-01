@@ -24,5 +24,6 @@ message recvnow(void)
  	* - check for message, if no messsage, error
  	*   		       else, retrieve & return message
  	*/ 
+ 
 	return msg;
 }
