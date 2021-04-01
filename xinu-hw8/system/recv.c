@@ -30,5 +30,31 @@ message recv(void)
  	*   return collected message
  	*/
 
+	register pcb *sender; 
+	pid_typ senderpid;
+
+	lock_acquire(ppcb -> msg_var.core_com_lock);
+
+	if (ppcb -> msg_var.hasMessage == FALSE) {
+		ppcb -> state = PRRECV;
+		resched();
+	}
+
+	msg = ppcb -> msg_var.msgin;
+	
+	if (ppcb -> msg_var.msgqueue = NULL) {
+		senderpid = dequeue(ppcb -> msg_var.msgqueue);
+		sender = &proctab[currpid[senderpid]];
+		
+		ppcb -> msg_var.msgin = sender -> msg_var.msgout;
+		sender -> msg_var.msgout = NULL;
+		sender -> state = PRREADY;
+		ready(senderpid, RESCHED_YES, sender -> core_affinity);
+	}
+
+	ppcb -> msg_var.hasMessage = FALSE;
+	msg = ppcb -> msg_var.msgin;
+	lock_release(ppcb -> msg_var.core_com_lock);
+
 	return msg;
 }

@@ -26,8 +26,29 @@ syscall send(int pid, message msg)
  	* - If receiving process has message, block sending process and put msg in msgout and call resched
  	* - Else, deposit message, change message flag and, if receiving process is blocking, ready it.
  	* - return ok.
- 	*/
+	*/
 
+	spcb = &proctab[currpid[getcpuid()]];
+	rpcb = &proctab[currpid[pid]];
+	
+ 	if (isbadpid(pid)){
+		 return SYSERR;
+	}
+	
+	lock_acquire(rpcb -> msg_var.core_com_lock);
+
+ 	if (rpcb -> msg_var.hasMessage){
+		spcb -> state = PRSEND;
+		spcb -> msg_var.msgout = msg;
+
+		enqueue(getcpuid(), rpcb -> msg_var.msgqueue);
+		resched();
+	} else {
+		rpcb -> msg_var.msgin = msg;
+		rpcb -> msg_var.hasMessage = TRUE;
+	}
+
+	lock_release(rpcb -> msg_var.core_com_lock);
 	
 	return OK;
 }

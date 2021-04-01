@@ -23,19 +23,18 @@ message recvnow(void)
  	* - Acquire and relsase lock when working in msg structure
  	* - check for message, if no messsage, error
  	*   		       else, retrieve & return message
- 	*/
- 	struct pmessage *currmsg = ppcb -> msg_var;
+	*/
 
-	lock_acquire(currmsg -> core_com_lock);
+	lock_acquire(ppcb -> msg_var.core_com_lock);
 
-	if (currmsg -> hasMessage == FALSE) {
-		lock_release(currmsg -> core_com_lock);
+	if (ppcb -> msg_var.hasMessage == FALSE) {
+		lock_release(ppcb -> msg_var.core_com_lock);
 		return SYSERR;
 	} else {
-		msg = currmsg -> msgin;
-		currmsg -> hasMessage = FALSE;
+		msg = ppcb -> msg_var.msgin;
+		ppcb -> msg_var.hasMessage = FALSE;
 	}
 
-	lock_release(currmsg -> core_com_lock);
+	lock_release(ppcb -> msg_var.core_com_lock);
 	return msg;
 }

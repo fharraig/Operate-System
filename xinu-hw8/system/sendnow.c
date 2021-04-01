@@ -27,23 +27,22 @@ syscall sendnow(int pid, message msg)
  	*/
 
  	ppcb = &proctab[currpid[pid]];
-	struct pmessage *newmsg = ppcb -> msg_var;
 
  	if(isbadpid(pid)){
 		 return SYSERR;
 	}
 
-	lock_acquire(newmsg -> core_com_lock);
+	lock_acquire(ppcb -> msg_var.core_com_lock);
 
-	if (newmsg -> hasMessage == TRUE) {
-		lock_release(newmsg -> core_com_lock);
+	if (ppcb -> msg_var.hasMessage) {
+		lock_release(ppcb -> msg_var.core_com_lock);
 		return SYSERR;
 	} else {
-		newmsg -> msgin = msg;
-		newmsg -> hasMessage = TRUE;
+		ppcb -> msg_var.msgin = msg;
+		ppcb -> msg_var.hasMessage = TRUE;
 	}
 
-	lock_release(newmsg -> core_com_lock);
+	lock_release(ppcb -> msg_var.core_com_lock);
 
 	if (ppcb -> state == PRRECV){
 		ppcb -> state = PRREADY;
