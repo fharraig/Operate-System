@@ -19,7 +19,7 @@ message recv(void)
 	int senderpid = -1;
 	message msg;
 	ppcb = &proctab[currpid[getcpuid()]];
-	
+
 	/* TODO:
  	* - Remember to acquire lock and release lock when interacitng with the msg structure
  	* - Check for Message. If no message, put in blocking state and reschedule
@@ -28,8 +28,7 @@ message recv(void)
  	*   If stuff in queue  collect message for next time recv is called and ready send process
  	*   else, reset message flag
  	*   return collected message
- 	*/	
-	
+ 	*/
 
 	return msg;
 }
