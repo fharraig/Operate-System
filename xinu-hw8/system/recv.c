@@ -31,8 +31,7 @@ message recv(void)
  	*/
 
 	register pcb *sender; 
-	pid_typ senderpid;
-
+	
 	lock_acquire(ppcb -> msg_var.core_com_lock);
 
 	if (ppcb -> msg_var.hasMessage == FALSE) {
