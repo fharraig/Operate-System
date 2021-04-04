@@ -36,7 +36,7 @@ message recv(void)
 
 	if (ppcb -> msg_var.hasMessage == FALSE) {
 		ppcb -> state = PRRECV;
-		resched();
+		resched(); //??????
 	}
 
 	msg = ppcb -> msg_var.msgin;
