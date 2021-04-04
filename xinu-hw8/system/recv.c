@@ -48,7 +48,6 @@ message recv(void)
 		ppcb -> msg_var.msgin = sender -> msg_var.msgout;
 		sender -> msg_var.msgout = NULL;
 
-		sender -> state = PRREADY;
 		ready(senderpid, RESCHED_YES, sender -> core_affinity);
 	}
 
