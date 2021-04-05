@@ -37,7 +37,7 @@ syscall send(int pid, message msg)
 	
 	lock_acquire(rpcb -> msg_var.core_com_lock);
 
- 	if (rpcb -> msg_var.hasMessage){
+ 	if (rpcb -> msg_var.hasMessage == TRUE){
 		spcb -> state = PRSEND;
 		spcb -> msg_var.msgout = msg;
 

@@ -55,6 +55,5 @@ message recv(void)
 	msg = ppcb -> msg_var.msgin;
 	
 	lock_release(ppcb -> msg_var.core_com_lock);
-
 	return msg;
 }

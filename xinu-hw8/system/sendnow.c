@@ -34,20 +34,19 @@ syscall sendnow(int pid, message msg)
 
 	lock_acquire(ppcb -> msg_var.core_com_lock);
 
-	if (ppcb -> msg_var.hasMessage) {
-		lock_release(ppcb -> msg_var.core_com_lock);
-		return SYSERR;
-	} else {
+	if (ppcb -> msg_var.hasMessage == FALSE) { 
 		ppcb -> msg_var.msgin = msg;
 		ppcb -> msg_var.hasMessage = TRUE;
+	} else {
+		lock_release(ppcb -> msg_var.core_com_lock);
+		return SYSERR;
 	}
 
-	lock_release(ppcb -> msg_var.core_com_lock);
-
 	if (ppcb -> state == PRRECV){
-		ppcb -> state = PRREADY;
+		//ppcb -> state = PRREADY;
 		ready(pid, RESCHED_YES, ppcb -> core_affinity);
 	}
 
+	lock_release(ppcb -> msg_var.core_com_lock);
 	return OK;
 }
