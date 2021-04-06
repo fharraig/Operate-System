@@ -43,8 +43,9 @@ syscall sendnow(int pid, message msg)
 	}
 
 	if (ppcb -> state == PRRECV){
-		//ppcb -> state = PRREADY;
-		ready(pid, RESCHED_YES, ppcb -> core_affinity);
+		ready(pid, RESCHED_YES, ppcb -> core_affinity); 
+		lock_release(ppcb -> msg_var.core_com_lock); 
+		return SYSERR;
 	}
 
 	lock_release(ppcb -> msg_var.core_com_lock);

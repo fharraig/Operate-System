@@ -41,8 +41,8 @@ syscall send(int pid, message msg)
 		spcb -> state = PRSEND;
 		spcb -> msg_var.msgout = msg;
 
-		enqueue(getcpuid(), rpcb -> msg_var.msgqueue); //???????
-		resched(); //?????????
+		enqueue(currpid[getcpuid()], rpcb -> msg_var.msgqueue);
+		resched(); 
 	} else { //same from sendnow
 		rpcb -> msg_var.msgin = msg;
 		rpcb -> msg_var.hasMessage = TRUE;
