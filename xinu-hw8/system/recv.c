@@ -36,8 +36,11 @@ message recv(void)
 
 	if (ppcb -> msg_var.hasMessage == FALSE) {
 		ppcb -> state = PRRECV;
+
 		lock_release(ppcb -> msg_var.core_com_lock);
 		resched(); 
+		
+		msg = NULL;
 	} else {
 
 		msg = ppcb -> msg_var.msgin;
