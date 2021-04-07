@@ -28,7 +28,7 @@ message recvnow(void)
 	lock_acquire(ppcb -> msg_var.core_com_lock);
 
 	if (ppcb -> msg_var.hasMessage == TRUE) {
-		msg = ppcb -> msg_var.msgin;
+		msg = ppcb -> msg_var.msgin; 
 		ppcb -> msg_var.hasMessage = FALSE;
 	} else {
 		lock_release(ppcb -> msg_var.core_com_lock);

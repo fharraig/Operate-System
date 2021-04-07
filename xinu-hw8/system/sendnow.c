@@ -20,16 +20,20 @@ syscall sendnow(int pid, message msg)
 
 	/* TODO:
  	* - Acquire Lock and release when appropriate
- 	* - PID & Process Error Checking (isbadpid)
+ 	* - PID & Process Error Checking (isbadpid) curr/ready/recv
  	* - Deposit Message, raise flag
  	* -  If receving message is blocked, ready process
  	* - Return OK
  	*/
 
- 	ppcb = &proctab[currpid[pid]];
+ 	ppcb = &proctab[pid];
 
- 	if(isbadpid(pid) || ppcb == NULL){
+ 	if(isbadpid(pid)){
 		 return SYSERR;
+	}
+
+	if (ppcb -> state != PRCURR && ppcb -> state != PRREADY && ppcb -> state != PRRECV) {
+		return SYSERR;
 	}
 
 	lock_acquire(ppcb -> msg_var.core_com_lock);
@@ -42,12 +46,12 @@ syscall sendnow(int pid, message msg)
 		return SYSERR;
 	}
 
-	if (ppcb -> state == PRRECV){
-		ready(pid, RESCHED_YES, ppcb -> core_affinity); 
-		lock_release(ppcb -> msg_var.core_com_lock); 
+	lock_release(ppcb -> msg_var.core_com_lock);
+
+	if (ppcb -> state == PRRECV) {
+		ready(pid, RESCHED_YES, ppcb -> core_affinity);  
 		return SYSERR;
 	}
-
-	lock_release(ppcb -> msg_var.core_com_lock);
+	
 	return OK;
 }

@@ -29,31 +29,42 @@ syscall send(int pid, message msg)
 	*/
 
 	spcb = &proctab[currpid[getcpuid()]];
-	rpcb = &proctab[currpid[pid]];
+	rpcb = &proctab[pid];
 	
- 	if (isbadpid(pid) || rpcb == NULL || spcb == NULL){
+ 	if (isbadpid(pid)) {
 		 return SYSERR;
 	}
-	
+
+	if (rpcb -> state != PRCURR && rpcb -> state != PRREADY && rpcb -> state != PRRECV) {
+		return SYSERR;
+	}
+
 	lock_acquire(rpcb -> msg_var.core_com_lock);
 
  	if (rpcb -> msg_var.hasMessage == TRUE){
+		enqueue(currpid[getcpuid()], rpcb -> msg_var.msgqueue);
+		lock_release(rpcb -> msg_var.core_com_lock);
+
+		lock_acquire(spcb -> msg_var.core_com_lock);
 		spcb -> state = PRSEND;
 		spcb -> msg_var.msgout = msg;
+		lock_release(spcb -> msg_var.core_com_lock);
 
-		enqueue(currpid[getcpuid()], rpcb -> msg_var.msgqueue);
 		resched(); 
 	} else if (rpcb -> msg_var.hasMessage == FALSE) { //same from sendnow
 		rpcb -> msg_var.msgin = msg;
 		rpcb -> msg_var.hasMessage = TRUE;
+
+		lock_release(rpcb -> msg_var.core_com_lock);
+
 		if (rpcb -> state == PRRECV) {
 			ready(pid, RESCHED_YES, rpcb -> core_affinity); 
 		}
+		
 	} else {
 		lock_release(rpcb -> msg_var.core_com_lock);
 		return SYSERR;
 	}
 
-	lock_release(rpcb -> msg_var.core_com_lock);
 	return OK;
 }

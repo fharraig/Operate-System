@@ -36,24 +36,26 @@ message recv(void)
 
 	if (ppcb -> msg_var.hasMessage == FALSE) {
 		ppcb -> state = PRRECV;
-		resched(); //??????
+		lock_release(ppcb -> msg_var.core_com_lock);
+		resched(); 
+	} else {
+
+		msg = ppcb -> msg_var.msgin;
+	
+		if (!(isempty(ppcb -> msg_var.msgqueue))) {
+			senderpid = dequeue(ppcb -> msg_var.msgqueue);
+			sender = &proctab[senderpid]; 
+			
+			ppcb -> msg_var.msgin = sender -> msg_var.msgout;
+			sender -> msg_var.msgout = NULL;
+
+			ready(senderpid, RESCHED_YES, sender -> core_affinity);
+		} else {
+			ppcb -> msg_var.hasMessage = FALSE;
+		}
+	
+		lock_release(ppcb -> msg_var.core_com_lock);
 	}
 
-	msg = ppcb -> msg_var.msgin;
-	
-	if (ppcb -> msg_var.msgqueue != NULL) {
-		senderpid = dequeue(ppcb -> msg_var.msgqueue);
-		sender = &proctab[currpid[senderpid]];
-		
-		ppcb -> msg_var.msgin = sender -> msg_var.msgout;
-		sender -> msg_var.msgout = NULL;
-
-		ready(senderpid, RESCHED_YES, sender -> core_affinity);
-	}
-
-	ppcb -> msg_var.hasMessage = FALSE;
-	msg = ppcb -> msg_var.msgin;
-	
-	lock_release(ppcb -> msg_var.core_com_lock);
 	return msg;
 }
