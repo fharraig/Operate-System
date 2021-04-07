@@ -48,9 +48,9 @@ syscall wait(semaphore sem)
      * Make this decrementation atomically-safe
      * so that multiple cores may safely wait for a semaphore.
      */
-	c = --semptr->count; //replace with atomic_decrement
+	c = --semptr->count;
 
-    if (c < 0) 
+    if (c < 0)
     {
         procptr->state = PRSUSP;
         procptr->sem = sem;
