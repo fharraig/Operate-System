@@ -28,7 +28,7 @@ syscall sendnow(int pid, message msg)
 
  	ppcb = &proctab[currpid[pid]];
 
- 	if(isbadpid(pid)){
+ 	if(isbadpid(pid) || ppcb == NULL){
 		 return SYSERR;
 	}
 

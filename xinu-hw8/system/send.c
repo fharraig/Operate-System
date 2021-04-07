@@ -31,7 +31,7 @@ syscall send(int pid, message msg)
 	spcb = &proctab[currpid[getcpuid()]];
 	rpcb = &proctab[currpid[pid]];
 	
- 	if (isbadpid(pid)){
+ 	if (isbadpid(pid) || rpcb == NULL || spcb == NULL){
 		 return SYSERR;
 	}
 	
@@ -43,12 +43,17 @@ syscall send(int pid, message msg)
 
 		enqueue(currpid[getcpuid()], rpcb -> msg_var.msgqueue);
 		resched(); 
-	} else { //same from sendnow
+	} else if (rpcb -> msg_var.hasMessage == FALSE) { //same from sendnow
 		rpcb -> msg_var.msgin = msg;
 		rpcb -> msg_var.hasMessage = TRUE;
+		if (rpcb -> state == PRRECV) {
+			ready(pid, RESCHED_YES, rpcb -> core_affinity); 
+		}
+	} else {
+		lock_release(rpcb -> msg_var.core_com_lock);
+		return SYSERR;
 	}
 
 	lock_release(rpcb -> msg_var.core_com_lock);
-	
 	return OK;
 }
