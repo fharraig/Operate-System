@@ -32,8 +32,8 @@ uchar getc(void)
 	wait(serial_port.isema);
 
 	c = (uchar) serial_port.istart;
-	//decrement icount
-	serial_port.istart += (1 % UART_IBLEN);
+	serial_port.icount--;
+	serial_port.istart = (serial_port.istart + 1) % UART_IBLEN;
 
 	signal(serial_port.isema);
 
@@ -66,16 +66,20 @@ syscall putc(char c)
 	 */
 
 	if (serial_port.oidle == TRUE){
+		
 		serial_port.oidle = FALSE;
-		serial_port.csr -> dr = c; //??????
+		((struct pl011_uart_csreg *) serial_port.csr) -> dr = c; 
+
 	} else {
 		wait(serial_port.osema);
+
 		lock_acquire(serial_port.olock);
-		serial_port.out[serial_port.ostart, serial_port.ocount % UART_OBLEN] = c;
-		//increment ocount
+
+		serial_port.out[(serial_port.ostart + serial_port.ocount) % UART_OBLEN] = c;
+		serial_port.ocount++;
+
 		lock_release(serial_port.olock);
 	}
-
 
 	restore(im);
 	return OK;
@@ -98,7 +102,7 @@ syscall printf(const char *format, ...)
 	int retval;
 
 	va_list ap;
-	va_start(ap, format);
+	va_start(ap, format); 
 	retval = _doprnt(format, ap, (int (*)(int, int))putc, 0);
 	va_end(ap);
 
