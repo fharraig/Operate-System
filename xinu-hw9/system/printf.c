@@ -29,6 +29,14 @@ uchar getc(void)
 	 */
 
 
+	wait(serial_port.isema);
+
+	c = (uchar) serial_port.istart;
+	//decrement icount
+	serial_port.istart += (1 % UART_IBLEN);
+
+	signal(serial_port.isema);
+
 	restore(im);
 	return c;
 }
@@ -56,6 +64,17 @@ syscall putc(char c)
 	 * amount of bytes in buffer, and total length of the UART output buffer.
 	 * Then, increment the counter of bytes in the output buffer. Release the spinlock.
 	 */
+
+	if (serial_port.oidle == TRUE){
+		serial_port.oidle = FALSE;
+		serial_port.csr -> dr = c; //??????
+	} else {
+		wait(serial_port.osema);
+		lock_acquire(serial_port.olock);
+		serial_port.out[serial_port.ostart, serial_port.ocount % UART_OBLEN] = c;
+		//increment ocount
+		lock_release(serial_port.olock);
+	}
 
 
 	restore(im);

@@ -44,7 +44,8 @@ syscall signaln(semaphore sem, int count)
 	* Make this incrementation atomically-safe
 	* so that multiple cores may safely signal a semaphore.
 	*/
-		c = ++semptr->count;
+
+		c = _atomic_inrement(&semptr -> count);
 
         if (c <= 0)
         {
