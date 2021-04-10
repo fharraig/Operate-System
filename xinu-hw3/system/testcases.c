@@ -56,7 +56,7 @@ void testcases(void)
             }
             break;
         case 'd':
-            kprintf("Enter character ...");
+            kprintf("Enter character ... \r \n");
             w = kgetc(); //takes in input char and prints it
             kprintf("Char = %c \r \n", w);
             break;

@@ -31,7 +31,7 @@ uchar getc(void)
 
 	wait(serial_port.isema);
 
-	c = (char) serial_port.istart;
+	c = serial_port.in[serial_port.istart];
 	serial_port.icount--;
 	serial_port.istart = (serial_port.istart + 1) % UART_IBLEN;
 

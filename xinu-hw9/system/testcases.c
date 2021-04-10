@@ -34,6 +34,8 @@ void testcases(void)
     uchar c;
     semaphore testsem;
 
+    char w;
+
     enable();
 
     printf("===TEST BEGIN===\r\n");
@@ -42,6 +44,25 @@ void testcases(void)
     c = getc();
     switch (c)
     {
+
+        case 'a':
+        case 'A':
+            printf("Enter character ... \r\n");
+            w = getc(); //takes in input char and prints it
+            printf("Char = %c \r \n", w);
+            break;
+        case 's':
+        case 'S':
+            putc('X'); //prints random characters 
+            putc('S');
+            putc('P');
+            putc('Q');
+            putc('F');
+            break;
+        case 'd':
+        case 'D':
+            w = getc();
+            putc(w);
 
     default:
         break;
