@@ -35,7 +35,7 @@ uchar getc(void)
 	serial_port.icount--;
 	serial_port.istart = (serial_port.istart + 1) % UART_IBLEN;
 
-	restore(im);S
+	restore(im);
 	return c;
 }
 
