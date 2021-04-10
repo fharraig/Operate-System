@@ -31,11 +31,11 @@ uchar getc(void)
 
 	wait(serial_port.isema);
 
-	c = (uchar) serial_port.istart;
+	c = (char) serial_port.istart;
 	serial_port.icount--;
 	serial_port.istart = (serial_port.istart + 1) % UART_IBLEN;
 
-	restore(im);
+	restore(im);S
 	return c;
 }
 
