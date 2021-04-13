@@ -47,22 +47,31 @@ void testcases(void)
 
         case 'a':
         case 'A':
-            printf("Enter character ... \r\n");
-            w = getc(); //takes in input char and prints it
-            printf("Char = %c \r \n", w);
+            putc('H');
+            putc('E');
+            putc('L');
+            putc('L');
+            putc('O');
             break;
         case 's':
         case 'S':
-            putc('X'); //prints random characters 
-            putc('S');
-            putc('P');
-            putc('Q');
-            putc('F');
+           while ((w = getc()) != 'z') {
+               printf("not z \r\n");
+           }
             break;
         case 'd':
         case 'D':
+            printf("Enter character . . .  \r\n");
             w = getc();
             putc(w);
+            break;
+        case 'f':
+        case 'F':
+            while (w != 'q'){
+                w = getc();
+                putc(w);
+            }
+            break;
 
     default:
         break;
