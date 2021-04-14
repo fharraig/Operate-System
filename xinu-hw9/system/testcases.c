@@ -33,6 +33,8 @@ void testcases(void)
 {
     uchar c;
     semaphore testsem;
+    testsem = semcreate(8);
+    int i = 0;
 
     char w;
 
@@ -72,7 +74,30 @@ void testcases(void)
                 putc(w);
             }
             break;
-
+        case 'g':
+        case 'G':
+            print_sem(testsem); //prints current value (should be 7)
+            break;
+        case 'h':
+        case 'H':
+            while (i < 8){
+                wait(testsem);
+                print_sem(testsem);
+                i++;
+            } //brings it to 0
+            break;
+        case 'j':
+        case 'J':
+            while (i < 8){
+                wait(testsem);
+                print_sem(testsem);
+                i++;
+            } //brings semaphore to 0
+            signal(testsem);
+            print_sem(testsem);
+            signaln(testsem, 4);
+            print_sem(testsem); //should be 5
+            break;
     default:
         break;
     }
