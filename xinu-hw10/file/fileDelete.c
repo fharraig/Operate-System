@@ -2,10 +2,20 @@
 /* Copyright (C) 2008, Marquette University.  All rights reserved. */
 /*                                                                 */
 /* Modified by                                                     */
-/*                                                                 */
+/*              Matthew Covington                                  */
 /* and                                                             */
+/*              Alex Alarcon                                       */
 /*                                                                 */
-/*                                                                 */
+
+
+/** 
+ * COSC 3250 - Project 10
+ * fileDelete implementation
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
+
 
 #include <kernel.h>
 #include <memory.h>
@@ -28,24 +38,23 @@ devcall fileDelete(int fd)
         return SYSERR;
     }
 
-    if ((fd < 0) || (fd >= DISKBLOCKTOTAL)){
+    if ((fd < 0) || (fd >= DISKBLOCKTOTAL)) {
         return SYSERR;
     }
 
-     if (wait(supertab -> sb_dirlock) != OK){
+    if (wait(supertab -> sb_dirlock) != OK) {
         return SYSERR;
     }
 
     result = sbFreeBlock(supertab, supertab -> sb_dirlst -> db_fnodes[fd].fn_blocknum); 
 
-    if (result != OK){
+    if (result != OK) {
         return SYSERR;
     }
 
     supertab -> sb_dirlst -> db_fnodes[fd].fn_state = FILE_FREE; 
-    supertab -> sb_blocktotal--;
 
-    seek(DISK0, supertab -> sb_dirlst -> db_fnodes[fd].fn_blocknum);
+    seek(DISK0, supertab -> sb_dirlst -> db_blocknum);
 
     result = write(DISK0, supertab -> sb_dirlst, sizeof(struct dirblock));
 

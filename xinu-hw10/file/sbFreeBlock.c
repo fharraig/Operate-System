@@ -7,6 +7,15 @@
 /*        Alex Alarcon                                                      */
 /*                                                                 */
 
+/** 
+ * COSC 3250 - Project 10
+ * sbFreeBlock implementation
+ * @author Matthew Covington Alex Alarcon
+ * Instructor Sabirat Rubya
+ * TA-BOT:MAILTO matthew.covington@marquette.edu alex.alarcon@marquette.edu
+*/
+
+
 #include <kernel.h>
 #include <device.h>
 #include <memory.h>
@@ -23,5 +32,16 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     //  free blocks.  Use the superblock's locks to guarantee
     //  mutually exclusive access to the free list, and write
     //  the changed free list segment(s) back to disk.
-    return SYSERR;
+
+    if (psuper == NULL){
+        return SYSERR;
+    }
+
+    if (block < 0 || block >= DISKBLOCKTOTAL){
+        return SYSERR;
+    }
+
+    
+
+    return OK;
 }
