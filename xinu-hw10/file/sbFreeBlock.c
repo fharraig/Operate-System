@@ -33,6 +33,12 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     //  mutually exclusive access to the free list, and write
     //  the changed free list segment(s) back to disk.
 
+    struct freeblock *freeblk, *free2;
+    struct dirblock *swizzle;
+    struct dentry *phw;
+    int result, i;
+    int diskfd;
+
     if (psuper == NULL){
         return SYSERR;
     }
@@ -41,7 +47,5 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
         return SYSERR;
     }
 
-    
-
-    return OK;
+    return SYSERR;
 }
