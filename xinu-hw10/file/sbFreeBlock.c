@@ -2,9 +2,9 @@
 /* Copyright (C) 2008, Marquette University.  All rights reserved. */
 /*                                                                 */
 /* Modified by                                                     */
-/*                                                                 */
+/*        Matthew Covington                                                         */
 /* and                                                             */
-/*                                                                 */
+/*        Alex Alarcon                                                      */
 /*                                                                 */
 
 #include <kernel.h>
