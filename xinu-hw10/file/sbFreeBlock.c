@@ -39,7 +39,7 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     int result, i;
     int diskfd;
 
-    if (psuper == NULL){
+    if (NULL == psuper){
         return SYSERR;
     }
 
@@ -47,5 +47,14 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
         return SYSERR;
     }
 
+    phw = psuper->sb_disk;
+
+    if (NULL == phw) {
+        return SYSERR;
+    }
+
+    diskfd = phw - devtab;
+    freeblk = psuper->sb_freelst;
+    
     return SYSERR;
 }
