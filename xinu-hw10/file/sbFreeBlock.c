@@ -55,6 +55,16 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
 
     diskfd = phw - devtab;
     freeblk = psuper->sb_freelst;
+
+    if (freeblk == NULL){
+        return SYSERR;
+    } 
+
+    while (freeblk != NULL) {
+        freeblk = freeblk -> fr_next;
+    }
+
+    wait(psuper -> sb_freelock);
     
-    return SYSERR;
+    return OK;
 }

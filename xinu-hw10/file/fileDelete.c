@@ -34,7 +34,7 @@ devcall fileDelete(int fd)
 
     syscall result;
 
-    if ((NULL == supertab) || (NULL == filetab) || (isbadpfd(fd)) || (FILE_FREE == filetab[fd].fn_state)) {
+    if ((NULL == supertab) || (NULL == filetab) || (isbadfd(fd)) || (FILE_FREE == filetab[fd].fn_state)) {
         return SYSERR;
     }
 
@@ -49,6 +49,7 @@ devcall fileDelete(int fd)
     result = sbFreeBlock(supertab, supertab -> sb_dirlst -> db_fnodes[fd].fn_blocknum); 
 
     if (result != OK) {
+        signal(supertab -> sb_dirlock);
         return SYSERR;
     }
 
@@ -58,11 +59,11 @@ devcall fileDelete(int fd)
 
     result = write(DISK0, supertab -> sb_dirlst, sizeof(struct dirblock));
 
+    signal(supertab -> sb_dirlock);
+
     if (result != OK) {
         return SYSERR;
     }
-
-    signal(supertab -> sb_dirlock);
     
     return OK;
     
