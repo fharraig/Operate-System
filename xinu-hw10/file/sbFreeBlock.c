@@ -137,10 +137,11 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     }
     seek(diskfd, freeblk->fr_blocknum);
     if (SYSERR == write(diskfd, freeblk, sizeof(struct freeblock))) {
+        signal(psuper -> sb_freelock);
         return SYSERR;
     }
     freeblk->fr_next = free2;
 
-
+    signal(psuper -> sb_freelock);
     return OK;
 }
