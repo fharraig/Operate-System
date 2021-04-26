@@ -38,6 +38,7 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     struct dentry *phw;
     int result, i;
     int diskfd;
+    i = 0;
 
     if (NULL == psuper){
         return SYSERR;
@@ -54,17 +55,92 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
     }
 
     diskfd = phw - devtab;
+
+    //if freeblk null
+    //if freeblk full
+    //if freeblk ok
+
+    wait(psuper -> sb_freelock);
     freeblk = psuper->sb_freelst;
 
-    if (freeblk == NULL){
-        return SYSERR;
-    } 
+    if (freeblk == NULL) { //create new freelist if freelst = null
+        freeblk = malloc(sizeof(struct freeblock));
+        freeblk -> fr_blocknum = block;
+        freeblk -> fr_count = 0;
+        freeblk -> fr_next = NULL;
 
-    while (freeblk != NULL) {
+        seek(diskfd, block);
+        if (write(diskfd, psuper, sizeof(struct freeblock)) == SYSERR){
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }
+
+        //honestly i have no idea what this does but its in getblock so i added it in lol
+        free2 = freeblk;
+        swizzle = psuper -> sb_dirlst;
+        psuper -> sb_dirlst = (struct dirblock *)swizzle -> db_blocknum;
+        psuper -> sb_freelst = (struct freeblock *) block;
+        
+        seek (diskfd, psuper -> sb_blocknum);
+        if (write(diskfd, psuper, sizeof(struct superblock)) == SYSERR){
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }   
+        psuper -> sb_freelst = free2;
+        psuper -> sb_dirlst = swizzle;
+
+        signal(psuper -> sb_freelock);
+        return OK;
+    }
+
+    //otherwise, loop through until a reasonable spot is found
+    while (freeblk -> fr_next != NULL) {
         freeblk = freeblk -> fr_next;
     }
 
-    wait(psuper -> sb_freelock);
-    
+    //error checking to see if for some reason block is already in the freelist
+    if (freeblk -> fr_blocknum == block){
+        signal(psuper -> sb_freelock);
+        return SYSERR;
+    }
+
+    while (i < freeblk -> fr_count){
+        if (freeblk -> fr_free[i] == block){
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }
+    }
+
+    if (freeblk -> fr_count >= DISKBLOCKTOTAL) {//if freelist is full, make a new freelist
+        free2 = malloc(sizeof(struct freeblock));
+        free2 -> fr_blocknum = block;
+        free2 -> fr_count = 0;
+        free2 -> fr_next = NULL;
+
+        seek(diskfd, block);
+        if (write(diskfd, free2, sizeof(struct freeblock)) == SYSERR){
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }
+
+    } else { //otherwise, toss it in at the end
+        freeblk -> fr_free[freeblk -> fr_count] = block;
+        freeblk -> fr_count++;
+    }
+
+    //update this freeblock record on disk
+    free2 = freeblk->fr_next;
+    if (NULL == freeblk->fr_next) {
+        freeblk->fr_next = 0;
+    } else {
+        freeblk->fr_next = (struct freeblock *)freeblk->fr_next->fr_blocknum;
+    }
+    seek(diskfd, freeblk->fr_blocknum);
+    if (SYSERR == write(diskfd, freeblk, sizeof(struct freeblock))) {
+        return SYSERR;
+    }
+    freeblk->fr_next = free2;
+
+
     return OK;
 }
