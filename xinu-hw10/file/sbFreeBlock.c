@@ -109,6 +109,7 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
             signal(psuper -> sb_freelock);
             return SYSERR;
         }
+        i++;
     }
 
     if (freeblk -> fr_count >= DISKBLOCKTOTAL) {//if freelist is full, make a new freelist
@@ -128,7 +129,7 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
         freeblk -> fr_count++;
     }
 
-    //update this freeblock record on disk
+    //update this freeblock record on disk, stolen from getblock
     free2 = freeblk->fr_next;
     if (NULL == freeblk->fr_next) {
         freeblk->fr_next = 0;
