@@ -98,20 +98,6 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
         freeblk = freeblk -> fr_next;
     }
 
-    //error checking to see if for some reason block is already in the freelist
-    if (freeblk -> fr_blocknum == block){
-        signal(psuper -> sb_freelock);
-        return SYSERR;
-    }
-
-    while (i < freeblk -> fr_count){
-        if (freeblk -> fr_free[i] == block){
-            signal(psuper -> sb_freelock);
-            return SYSERR;
-        }
-        i++;
-    }
-
     if (freeblk -> fr_count >= DISKBLOCKTOTAL) {//if freelist is full, make a new freelist
         free2 = malloc(sizeof(struct freeblock));
         free2 -> fr_blocknum = block;
