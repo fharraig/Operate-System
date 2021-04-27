@@ -65,29 +65,32 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
 
     if (freeblk == NULL) { //create new freelist if freelst = null
         freeblk = malloc(sizeof(struct freeblock));
-        freeblk -> fr_blocknum = block;
-        freeblk -> fr_count = 0;
-        freeblk -> fr_next = NULL;
+
+        if (freeblk == NULL) {
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }
 
         seek(diskfd, block);
         if (write(diskfd, psuper, sizeof(struct freeblock)) == SYSERR){
             signal(psuper -> sb_freelock);
             return SYSERR;
         }
-
-        //honestly i have no idea what this does but its in getblock so i added it in lol
-        free2 = freeblk;
-        swizzle = psuper -> sb_dirlst;
-        psuper -> sb_dirlst = (struct dirblock *)swizzle -> db_blocknum;
-        psuper -> sb_freelst = (struct freeblock *) block;
         
-        seek (diskfd, psuper -> sb_blocknum);
-        if (write(diskfd, psuper, sizeof(struct superblock)) == SYSERR){
-            signal(psuper -> sb_freelock);
+        psuper->sb_freelst = freeblk;
+        swizzle = psuper->sb_dirlst;
+        psuper->sb_dirlst = (struct dirblock *)swizzle->db_blocknum;
+        seek(diskfd, psuper->sb_blocknum);
+        if (SYSERR == write(diskfd, psuper, sizeof(struct superblock))) {
             return SYSERR;
-        }   
-        psuper -> sb_freelst = free2;
-        psuper -> sb_dirlst = swizzle;
+        }
+        psuper->sb_dirlst = swizzle;
+
+        freeblk -> fr_blocknum = (int) freeblk;
+        freeblk -> fr_count = 1;
+        freeblk -> fr_next = 0;
+
+        freeblk -> fr_free[freeblk -> fr_count - 1] = block;
 
         signal(psuper -> sb_freelock);
         return OK;
@@ -100,6 +103,12 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
 
     if (freeblk -> fr_count >= DISKBLOCKTOTAL) {//if freelist is full, make a new freelist
         free2 = malloc(sizeof(struct freeblock));
+
+        if (free2 == NULL){
+            signal(psuper -> sb_freelock);
+            return SYSERR;
+        }
+
         free2 -> fr_blocknum = block;
         free2 -> fr_count = 0;
         free2 -> fr_next = NULL;
@@ -127,7 +136,13 @@ devcall sbFreeBlock(struct superblock *psuper, int block)
         signal(psuper -> sb_freelock);
         return SYSERR;
     }
+
     freeblk->fr_next = free2;
+
+    freeblk -> fr_blocknum = (int) freeblk;
+    freeblk -> fr_count = 1;
+    freeblk -> fr_next = 0;
+    freeblk -> fr_free[freeblk -> fr_count - 1] = block;
 
     signal(psuper -> sb_freelock);
     return OK;
